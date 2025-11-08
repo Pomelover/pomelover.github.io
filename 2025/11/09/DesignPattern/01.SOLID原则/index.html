@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SOLID原则 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SOLID原则简介​	SOLID原则其实是以下五条原则的简称:  单一职责原则（Single Responsibility Principle） 开闭原则（Open&#x2F;Closed Principle） 里式替换原则（Liskov Substitution Principle） 接口隔离原则（Interface Segregation Principle） 依赖倒置原则（Dependenc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SOLID原则">
+<meta property="og:url" content="https://pomelover.github.io/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="SOLID原则简介​	SOLID原则其实是以下五条原则的简称:  单一职责原则（Single Responsibility Principle） 开闭原则（Open&#x2F;Closed Principle） 里式替换原则（Liskov Substitution Principle） 接口隔离原则（Interface Segregation Principle） 依赖倒置原则（Dependenc">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/images/posts/shuffle_cards.jpg">
+<meta property="article:published_time" content="2025-11-08T18:10:27.876Z">
+<meta property="article:modified_time" content="2025-11-08T22:16:02.695Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="面向对象 设计模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/images/posts/shuffle_cards.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SOLID原则",
+  "url": "https://pomelover.github.io/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/",
+  "image": "https://pomelover.github.io/images/posts/shuffle_cards.jpg",
+  "datePublished": "2025-11-08T18:10:27.876Z",
+  "dateModified": "2025-11-08T22:16:02.695Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://pomelover.github.io/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SOLID原则',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-flash.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div id="web_bg" style="background-image: url(/images/pages/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/posts/shuffle_cards.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">SOLID原则</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">SOLID原则</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-08T18:10:27.876Z" title="发表于 2025-11-09 02:10:27">2025-11-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-08T22:16:02.695Z" title="更新于 2025-11-09 06:16:02">2025-11-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0/">设计模式学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="SOLID原则"><a href="#SOLID原则" class="headerlink" title="SOLID原则"></a>SOLID原则</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​	<strong>SOLID原则</strong>其实是以下五条原则的简称:</p>
+<ul>
+<li>单一职责原则（<strong>S</strong>ingle Responsibility Principle）</li>
+<li>开闭原则（<strong>O</strong>pen&#x2F;Closed Principle）</li>
+<li>里式替换原则（<strong>L</strong>iskov Substitution Principle）</li>
+<li>接口隔离原则（<strong>I</strong>nterface Segregation Principle）</li>
+<li>依赖倒置原则（<strong>D</strong>ependency Inversion Principle）</li>
+</ul>
+<p>​	这五条原则最初由罗伯特·马丁提出，目的是为了让软件设计更易于理解、更加灵活以及更易于维护。</p>
+<h2 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h2><h3 id="简要介绍"><a href="#简要介绍" class="headerlink" title="简要介绍"></a>简要介绍</h3><blockquote>
+<p><strong>修改一个类的原因只有一个</strong>。</p>
+</blockquote>
+<p>​	单一职责原则的含义是<strong>修改一个类的原因只有一个</strong>。笔者一开始看到这句话其实是有一点懵的，经过一番消化，个人的理解是，一个类应该专注于做一件事。它的主要目的是减少类的复杂度，同时提高可维护性。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>​	观察以下例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	<span class="comment">// 工作</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        do_something;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 打印</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        print_some_employee_infomations;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	可以看到在<code>Employee</code>类中，其既负责了工作，又负责了一些杂事（例如打印）。如果将<code>Employee</code>需要做的所有事情都封装进类中，那么最后类会变得十分庞大，降低可读性、增加耦合性，变得不易维护。</p>
+<p>​	那么我们完全可以在设计初期就将杂事分离出来，对于一个<code>Employee</code>，公司最看中的应该是其工作能力<code>work</code>，因此我们可以将杂事（<code>print</code>）抽离出来，建立单独的类<code>PrintService</code>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	<span class="comment">// 工作</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        do_something;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PrintService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 打印</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(Employee E)</span> </span>&#123;</span><br><span class="line">        print_the_informations_of_E;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	这样单个类变得简洁，可读性强，后续如果需要对<code>print</code>进行修改，我们只需到特定的类<code>PrintService</code>进行修改即可；同时，如果我们后续如果需要增加一个打印老板<code>Boss</code>的信息，则直接在<code>PrintService</code>内新增函数<code>print（Boss）</code>即可，类扩展性也将变强。</p>
+<blockquote>
+<p><strong>个人碎碎念</strong></p>
+<p>​	在学到这里个人存在一个疑问，就是如果像上面如此做，是否是以减少类的封装性为代价呢？毕竟一开始<code>print</code>是封装在<code>Employee</code>内的成员函数。</p>
+</blockquote>
+<p>​	</p>
+<h2 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h2><h3 id="简要介绍-1"><a href="#简要介绍-1" class="headerlink" title="简要介绍"></a>简要介绍</h3><blockquote>
+<p>对于扩展，类应该是“开放”的；对于修改，类则应是“封闭”的。</p>
+</blockquote>
+<p>​	开闭原则的含义是<strong>对于扩展，类应该是“开放”的；对于修改，类则应是“封闭”的。</strong>这条乍一看有一点分离，毕竟开和闭是一对反义词，其实这条我个人感觉还是比较好理解的。通俗来讲就是，对于一个成功实现的类，我们尽量不要去修改其实现，而是在其基础上进行扩展。</p>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><p>​	譬如刚刚我们实现了<code>BasePrintService</code>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BasePrintService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 打印</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(Employee E)</span> </span>&#123;</span><br><span class="line">        print_the_basic_informations_of_E;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	如果我们现在的类只支持打印雇员的基本资料（年龄、性别等等），现在公司希望加入一个背调功能，还能够让其支持打印其过往的工作经历等等，那么我们可以基于这个<code>BasePrintService</code>实现一个新的打印类<code>ExtraPrintService</code>，继承并扩展新的接口:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ExtraPrintService</span>: <span class="keyword">public</span> BasePrintService</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">printExtraInformation</span><span class="params">(Employee E)</span> </span>&#123;</span><br><span class="line">        print_the_extra_informations_of_E;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	这样我们没有修改<code>BasePrintService</code>的代码，保证了其的正确运行的同时扩展了我们的功能，降低了由于需要修改<code>BasePrintService</code>的原始代码出现bug的风险。</p>
+<blockquote>
+<p><strong>个人碎碎念</strong></p>
+<p>​	其实个人去理解这个原则感觉上还是比较轻松的，但是找示例确实没有想到特别合适的示例，可能还是理解不够深刻。在我看来，这个原则有一点像一句趣话：如果一个代码能正常运行，那你就别去动它。</p>
+</blockquote>
+<h2 id="里氏替换原则"><a href="#里氏替换原则" class="headerlink" title="里氏替换原则"></a>里氏替换原则</h2><h3 id="简要介绍-2"><a href="#简要介绍-2" class="headerlink" title="简要介绍"></a>简要介绍</h3><blockquote>
+<p>当你扩展一个类时， 记住你应该要能在不修改客户端代码的情况下将子类的对象作为父类对象进行传递。</p>
+</blockquote>
+<p>​	里氏替换原则的含义是<strong>子类必须遵守父类的行为契约</strong>，即<strong>子类对象可以替换父类对象，并且程序行为不改变</strong>。其应遵守以下守则：</p>
+<ul>
+<li><strong>不可加强前置条件</strong>：客户端对父类能做的事情，子类不能要求更多限制。</li>
+<li><strong>不可削弱后置条件</strong>：子类必须保证父类承诺的结果仍然成立。</li>
+<li><strong>不可破坏类不变式</strong>：父类的内部不变性必须对子类保持成立。</li>
+<li><strong>异常行为也应兼容</strong>：子类不应抛出父类不预期的异常，或改变异常含义。</li>
+</ul>
+<h3 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a>示例</h3><ul>
+<li><h4 id="不可加强前置条件"><a href="#不可加强前置条件" class="headerlink" title="不可加强前置条件"></a><strong>不可加强前置条件</strong></h4></li>
+</ul>
+<p>​	在此，我们考虑一个场景，我们现在有一个银行，将用户分为<code>Normal</code>和<code>Bankrupt</code>两种类型:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Normal</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> amount;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">Change</span><span class="params">(<span class="type">int</span> num)</span></span>&#123;</span><br><span class="line">        <span class="comment">//由于用户是正常的，因此此时num正负皆可</span></span><br><span class="line">        <span class="comment">//正为存钱，负为贷款</span></span><br><span class="line">        amount+=num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bankrupt</span>: <span class="keyword">public</span> Normal</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Change</span><span class="params">(<span class="type">int</span> num)</span> <span class="keyword">override</span></span>&#123;</span><br><span class="line">        <span class="comment">//由于用户是正常的，因此此时num正负皆可</span></span><br><span class="line">        <span class="keyword">if</span>(num&lt;=<span class="number">0</span>) <span class="keyword">throw</span> <span class="string">&quot;Because you are bankrupt, you can’t borrow any money.&quot;</span>;</span><br><span class="line">        amount+=num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	我们的银行非常无情，如果你破产了，那我不能借给你任何钱（合情合理QwQ）。如果我们开发了一个客户端，使用了如下接口：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">changeUserAmount</span><span class="params">(Normal* User, <span class="type">int</span> amount)</span></span>&#123;</span><br><span class="line">    <span class="comment">//此时传入的是Normal类指针</span></span><br><span class="line">    User-&gt;<span class="built_in">Change</span>(amount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	那么当我们客户端在操作<code>Bankrupt</code>类型用户时，我们的无情也会引起不必要的异常。</p>
+<p>​	这就是加强了前置条件的例子：我们的父类<code>Normal</code>并没有设定Change的参数范围，但是我们的子类<code>Bankrupt</code>确确实实要求了你只能存钱不能贷款。</p>
+<ul>
+<li><h4 id="不可削弱后置条件"><a href="#不可削弱后置条件" class="headerlink" title="不可削弱后置条件"></a><strong>不可削弱后置条件</strong></h4></li>
+</ul>
+<p>​	再来看另一个场景，现在我们的银行有一个转账成员函数<code>trans</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Normal</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> amount;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">trans</span><span class="params">(<span class="type">int</span> num， Normal User)</span></span>&#123;</span><br><span class="line">        amount-=num;</span><br><span class="line">        User.amount+=num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	但是我们的银行发现最近诈骗猖獗，许多大额转账后续都被查实了是诈骗案例，因此，设计开发了如下的派生类<code>SaveNormal</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SaveNormal</span>: <span class="keyword">public</span> Normal</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">trans</span><span class="params">(<span class="type">int</span> num， Normal User)</span> <span class="keyword">override</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(amount&gt;<span class="number">1000</span>)&#123;</span><br><span class="line">            cout&lt;&lt;<span class="string">&quot;Based on the evidence, it’s highly likely to be a scam.&quot;</span>&lt;&lt;endl;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">        amount-=num;</span><br><span class="line">        User.amount+=num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	那么当我们客户端如果存在如下调用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Trans</span><span class="params">(Normal* User1, Normal* User2,<span class="type">int</span> amount)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> old=User<span class="number">1.</span><span class="built_in">get</span>();</span><br><span class="line">    User1-&gt;<span class="built_in">trans</span>(amount,User2);</span><br><span class="line">    <span class="built_in">assert</span>(User1-&gt;<span class="built_in">get</span>() == old - amount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	这时，如果传入子类<code>SaveNormal</code>且<code>amount</code>大于1000时，<code>assert(User1-&gt;get() == old - amount);</code>即会抛出异常。这是因为我们子类破坏了父类的后置条件，父类并没有设定安全措施，因此转账是必然成立的，经历了转账后，<strong>存款数额必然变化</strong>（这就是我们的后置条件）。</p>
+<ul>
+<li><h4 id="不可破坏类不变式"><a href="#不可破坏类不变式" class="headerlink" title="不可破坏类不变式"></a><strong>不可破坏类不变式</strong></h4></li>
+</ul>
+<p>​	我们现在从研究金融行业转换为研究生物学，我们是鸟类生物研究砖家，在我们的建立下，数据库存在了以下鸟基类<code>Bird</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Bird</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Leg LeftLeg, RightLeg;</span><br><span class="line">    Wing LeftWing, RightWing;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">fly</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//飞飞飞</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	在一次偶然的机会，我们来到了南极，发现了一种新奇的“鸟类”，他们同样基本和鸟类有两个翅膀、两只脚，甚至有的时候喃喃自语似乎说着“你冲QB吗”什么的&#x3D;v&#x3D;</p>
+<p><img src="/.%5Cimages%5C01%5CQB.jpg" alt="你充QB吗"></p>
+<p>​	兴奋的你意识到：这是一种新的鸟类！！！！脑海里幻想着<code>Nature</code>,<code>Science</code>（疑似延毕前的最终幻想）翘着二郎腿给你发现的新型鸟类建立子类：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Penguin</span>: <span class="keyword">public</span> Bird</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">fly</span><span class="params">()</span> <span class="keyword">override</span></span>&#123;</span><br><span class="line">        <span class="comment">//飞不起来</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	就在你幻想的时候，突然你的客户端报错了，它的一句话打破了你的所有幻想：这玩意儿飞不起来！这就是破坏类不变式的例子，我们的父类<code>Bird</code>定义了成员函数<code>fly</code>，限定了<strong>所有的鸟类都要会飞</strong>，但是，作为子类的<code>Penguin</code>却并不会飞，破坏了父类的类不变式！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/">https://pomelover.github.io/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">面向对象 设计模式</a></div><div class="post-share"><div class="social-share" data-image="/images/posts/shuffle_cards.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/10/18/%E6%B4%97%E7%89%8C%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="洗牌算法学习与实现"><img class="cover" src="/images/posts/shuffle_cards.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">洗牌算法学习与实现</div></div><div class="info-2"><div class="info-item-1">洗牌算法学习与实现项目介绍本文章是个人对随机算法(梅森旋转算法)以及四种洗牌算法的学习记录与个人实现，具体思路参考b站up主voidmatrix的相关视频，在此感谢他的分享。 梅森旋转算法算法简介​	梅森旋转算法（Mersenne Twister） 是一种伪随机数生成器（PRNG, Pseudo Random Number Generator），  由日本数学家 松本真（Makoto Matsumoto） 和 西村拓士（Takuji Nishimura） 于 1997 年提出。 ​	算法名称中的 “Mersenne” 来源于数学中的 梅森素数（Mersenne Prime），  即形如： $$M_p &#x3D; 2^p - 1$$ 当 $M_p$ 为素数时，p 本身也是素数。而梅森旋转算法的状态周期正是基于 $2^{19937} - 1$这一梅森素数构造的。 参数设定与变量定义​	在手撕梅森旋转算法时，我们先定义好其所需的参数。 12345678910111213141516171819using value_type = std::uint32_t;static conste...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SOLID%E5%8E%9F%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">SOLID原则</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.</span> <span class="toc-text">单一职责原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">简要介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="toc-number">1.3.</span> <span class="toc-text">开闭原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">简要介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2%E5%8E%9F%E5%88%99"><span class="toc-number">1.4.</span> <span class="toc-text">里氏替换原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D-2"><span class="toc-number">1.4.1.</span> <span class="toc-text">简要介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8A%A0%E5%BC%BA%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">不可加强前置条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%89%8A%E5%BC%B1%E5%90%8E%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">不可削弱后置条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E7%A0%B4%E5%9D%8F%E7%B1%BB%E4%B8%8D%E5%8F%98%E5%BC%8F"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">不可破坏类不变式</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/" title="SOLID原则"><img src="/images/posts/shuffle_cards.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SOLID原则"/></a><div class="content"><a class="title" href="/2025/11/09/DesignPattern/01.SOLID%E5%8E%9F%E5%88%99/" title="SOLID原则">SOLID原则</a><time datetime="2025-11-08T18:10:27.876Z" title="发表于 2025-11-09 02:10:27">2025-11-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/18/%E6%B4%97%E7%89%8C%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="洗牌算法学习与实现"><img src="/images/posts/shuffle_cards.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="洗牌算法学习与实现"/></a><div class="content"><a class="title" href="/2025/10/18/%E6%B4%97%E7%89%8C%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="洗牌算法学习与实现">洗牌算法学习与实现</a><time datetime="2025-10-18T08:21:22.000Z" title="发表于 2025-10-18 16:21:22">2025-10-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/posts/shuffle_cards.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="/"></script></div></body></html>
