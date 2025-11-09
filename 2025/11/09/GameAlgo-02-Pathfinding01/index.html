@@ -1,0 +1,380 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>游戏中的寻路算法（一）： | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文是寻路算法的第一篇文章，主要介绍了无信息搜索算法中的BFS算法与Dijkstra算法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏中的寻路算法（一）：">
+<meta property="og:url" content="https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="本文是寻路算法的第一篇文章，主要介绍了无信息搜索算法中的BFS算法与Dijkstra算法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png">
+<meta property="article:published_time" content="2025-11-09T08:22:18.000Z">
+<meta property="article:modified_time" content="2025-11-09T12:40:43.395Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="洗牌算法">
+<meta property="article:tag" content="游戏算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "游戏中的寻路算法（一）：",
+  "url": "https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/",
+  "image": "https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png",
+  "datePublished": "2025-11-09T08:22:18.000Z",
+  "dateModified": "2025-11-09T12:40:43.395Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '游戏中的寻路算法（一）：',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><script src="/assets/js/DPlayer.min.js"></script></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-flash.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div id="web_bg" style="background-image: url(/images/pages/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">游戏中的寻路算法（一）：</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">游戏中的寻路算法（一）：</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-09T08:22:18.000Z" title="发表于 2025-11-09 16:22:18">2025-11-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-09T12:40:43.395Z" title="更新于 2025-11-09 20:40:43">2025-11-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%B8%E6%88%8F%E7%AE%97%E6%B3%95/">游戏算法</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="游戏中的寻路算法（一）：无信息搜索"><a href="#游戏中的寻路算法（一）：无信息搜索" class="headerlink" title="游戏中的寻路算法（一）：无信息搜索"></a>游戏中的寻路算法（一）：无信息搜索</h1><h2 id="简要介绍"><a href="#简要介绍" class="headerlink" title="简要介绍"></a>简要介绍</h2><p>​	本文是新坑的开始，也是最近个人对寻路算法学习后的总结。提起寻路算法，就不得不聊到一款经典的游戏——吃豆人。你该如何设计游戏中的红色幽灵的移动方式，让它能够尽快阻止玩家控制的吃豆人呢？</p>
+<p><img src="/2025/11/09/GameAlgo-02-Pathfinding01/handheld.png" alt="Pac-Man"></p>
+<p>​	在这里，寻路算法就是关键所在了，一个好的寻路算法，能够让红色幽灵在每一个路口在尽量短的时间内选择出较佳的方向选择，缩短与玩家之间的距离。寻路算法可以简要分为无信息搜索与启发式搜索。本文将介绍并实现二维网格中的无信息搜索。</p>
+<hr>
+<h2 id="算法介绍"><a href="#算法介绍" class="headerlink" title="算法介绍"></a>算法介绍</h2><h3 id="无信息搜索"><a href="#无信息搜索" class="headerlink" title="无信息搜索"></a>无信息搜索</h3><p>​	无信息搜索也可以说是盲目搜索，它不利用关于目标点的额外信息（也许是你不想用，也许是你根本就没办法利用目标点信息），你能知道的只有起点与其可能的移动方式。比较经典的无信息搜索算法有<strong>广度优先搜索（Breadth First Search）</strong>、<strong>深度优先搜索（Depth-First Search）</strong>和<strong>迪杰斯特拉算法（Dijkstra’s Algorithm）</strong>等。其各自的特点以及优缺点如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>算法名称</th>
+<th>特点</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>广度优先搜索（BFS）</strong></td>
+<td>按层次逐步扩展节点，从起点开始一层一层向外搜索，直到找到目标。</td>
+<td>实现简单且在无权图能够找到最短的路径。</td>
+<td>内存消耗大，在带权重图中表现差。</td>
+</tr>
+<tr>
+<td><strong>深度优先搜索（DFS）</strong></td>
+<td>一条路走到底，走不通就回溯，直到遍历完所有可能路径。</td>
+<td>利用递归实现简单。</td>
+<td>只能保证找到路径，但是往往不是最佳路径。</td>
+</tr>
+<tr>
+<td><strong>迪杰斯特拉算法（Dijkstra）</strong></td>
+<td>使用<strong>最小代价优先策略</strong>，逐步扩展代价最小的节点，计算单源最短路径。</td>
+<td>能够处理正权重图，同时保证最优解。</td>
+<td>时间复杂度高。</td>
+</tr>
+</tbody></table>
+<p>​	本文将重点介绍<strong>BFS</strong>与<strong>Dijkstra</strong>算法。</p>
+<h4 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h4><p>​	<strong>BFS</strong>的思想类似树的层次遍历，其从起点开始<strong>按层次</strong>向外扩展结点，直至<strong>遍历完整个连通图或者找到目标节点</strong>。一般实现采用<strong>队列</strong>作为基础数据结构，用来保存当前层结点，每次从队列取出结点，并将其所有<strong>未被访问过的相邻结点</strong>加入队列中。在<strong>无权图</strong>中，其能够保证找到从起点至终点的最短路径。其时间复杂度为**O(V+E)**。</p>
+<h4 id="迪杰斯特拉算法"><a href="#迪杰斯特拉算法" class="headerlink" title="迪杰斯特拉算法"></a>迪杰斯特拉算法</h4><p>​	<strong>Dijkstra</strong>由荷兰计算机科学家<strong>Edsger W. Dijkstra</strong>于1956年提出，它是一种经典的单源最短路径算法。它用于计算<strong>正权值图</strong>从起点到图中所有其他节点的最短路径。其核心思想通过“逐步扩展”已知的最短路径集合，在每一步中选取当前<strong>代价最小的未扩展节点</strong>，并<strong>更新其相邻节点的最短距离</strong>，直至<strong>遍历完整个连通图或者找到目标节点</strong>，一般实现采用<strong>优先队列</strong>作为基础数据结构。其时间复杂度为<strong>O(E log V)</strong> 。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>注意，在无权图的情况下，<strong>Dijkstra</strong>将退化为<strong>BFS</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><h3 id="定义具体问题"><a href="#定义具体问题" class="headerlink" title="定义具体问题"></a>定义具体问题</h3><p>​	我们将具体问题进行如下建模：</p>
+<ul>
+<li><p><strong>类吃豆人</strong>：在<strong>二维无权网格Grid</strong>中，0表示空白位置，-1表示障碍位置（该位置无法行进），给定起点<strong>Source</strong>与终点<strong>Destination</strong>，寻找起点到终点的最短路径；</p>
+</li>
+<li><p><strong>类开放世界</strong>：在<strong>二维正权网格Grid</strong>中，<code>Grid[x,y]</code>表示进入(x,y)代价值，给定起点<strong>Source</strong>与终点<strong>Destination</strong>，寻找起点到终点的最优路径（<strong>代价最小</strong>）；</p>
+</li>
+<li><p><strong>移动规则</strong>：四方向移动；</p>
+</li>
+</ul>
+<p>​	我们的问题建模都是在二维网格中进行的（主要是可视化方便&#x3D;v&#x3D;），同时我们的起点与终点都是给定的（但是由于我们的职业操守，我们是<strong>不会用终点信息</strong>的！毕竟是<strong>无信息搜索</strong>&#x3D;v&#x3D;），移动采取了四方向移动方式（即上、下、左、右），如果你喜欢你也可以进行<strong>八方向扩展</strong>。</p>
+<h3 id="创建坐标数据结构"><a href="#创建坐标数据结构" class="headerlink" title="创建坐标数据结构"></a>创建坐标数据结构</h3><p>​	为了后续实现方便，我们来自己写一个<code>Coords</code>类：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Coords</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> x, y;</span><br><span class="line">	<span class="comment">// 构造</span></span><br><span class="line">	<span class="built_in">Coords</span>() :<span class="built_in">x</span>(<span class="number">0</span>), <span class="built_in">y</span>(<span class="number">0</span>) &#123;&#125;</span><br><span class="line">	<span class="built_in">Coords</span>(<span class="type">int</span> _x, <span class="type">int</span> _y) :<span class="built_in">x</span>(_x), <span class="built_in">y</span>(_y) &#123;&#125;</span><br><span class="line">	<span class="comment">// 操作运算符</span></span><br><span class="line">	Coords <span class="keyword">operator</span>+(<span class="type">const</span> Coords&amp; rhs) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Coords</span>(x + rhs.x, y + rhs.y);</span><br><span class="line">	&#125;</span><br><span class="line">	Coords&amp; <span class="keyword">operator</span>+=(<span class="type">const</span> Coords&amp; rhs) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		x += rhs.x, y += rhs.y;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Coords <span class="keyword">operator</span>-(<span class="type">const</span> Coords&amp; rhs) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Coords</span>(x - rhs.x, y - rhs.y);</span><br><span class="line">	&#125;</span><br><span class="line">	Coords&amp; <span class="keyword">operator</span>-=(<span class="type">const</span> Coords&amp; rhs) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		x -= rhs.x, y -= rhs.y;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Coords <span class="keyword">operator</span>*(<span class="type">const</span> Coords&amp; rhs) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Coords</span>(x * rhs.x, y * rhs.y);</span><br><span class="line">	&#125;</span><br><span class="line">	Coords&amp; <span class="keyword">operator</span>*=(<span class="type">const</span> Coords&amp; rhs) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		x *= rhs.x, y *= rhs.y;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Coords <span class="keyword">operator</span>*(<span class="type">int</span> scalar) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Coords</span>(x * scalar, y * scalar);</span><br><span class="line">	&#125;</span><br><span class="line">	Coords&amp; <span class="keyword">operator</span>*=(<span class="type">int</span> scalar) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		x *= scalar;</span><br><span class="line">		y *= scalar;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">friend</span> Coords <span class="keyword">operator</span>*(<span class="type">int</span> scalar, <span class="type">const</span> Coords&amp; c) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Coords</span>(c.x * scalar, c.y * scalar);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> Coords&amp; rhs) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x == rhs.x &amp;&amp; y == rhs.y;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">bool</span> <span class="keyword">operator</span>!=(<span class="type">const</span> Coords&amp; rhs) <span class="type">const</span> <span class="keyword">noexcept</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> !(*<span class="keyword">this</span> == rhs);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 打印信息</span></span><br><span class="line">	<span class="keyword">friend</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="type">const</span> Coords&amp; c) &#123;</span><br><span class="line">		os &lt;&lt; <span class="string">&quot;(&quot;</span> &lt;&lt; c.x &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; c.y &lt;&lt; <span class="string">&quot;)&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> os;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 点积</span></span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">dot</span><span class="params">(<span class="type">const</span> Coords&amp; rhs)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> x * rhs.x + y * rhs.y;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">friend</span> <span class="type">int</span> <span class="title">dot</span><span class="params">(<span class="type">const</span> Coords&amp; lhs, <span class="type">const</span> Coords&amp; rhs)</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> lhs.x * rhs.x + lhs.y * rhs.y;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 距离计算</span></span><br><span class="line">	<span class="function"><span class="keyword">friend</span> <span class="type">int</span> <span class="title">L1Distance</span><span class="params">(<span class="type">const</span> Coords&amp; c1, <span class="type">const</span> Coords&amp; c2)</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="type">int</span> dx = c<span class="number">1.</span>x - c<span class="number">2.</span>x;</span><br><span class="line">		<span class="type">int</span> dy = c<span class="number">1.</span>y - c<span class="number">2.</span>y;</span><br><span class="line">		<span class="keyword">return</span> std::<span class="built_in">abs</span>(dx) + std::<span class="built_in">abs</span>(dy);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">friend</span> <span class="type">double</span> <span class="title">L2Distance</span><span class="params">(<span class="type">const</span> Coords&amp; c1, <span class="type">const</span> Coords&amp; c2)</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="type">int</span> dx = c<span class="number">1.</span>x - c<span class="number">2.</span>x;</span><br><span class="line">		<span class="type">int</span> dy = c<span class="number">1.</span>y - c<span class="number">2.</span>y;</span><br><span class="line">		<span class="keyword">return</span> std::<span class="built_in">sqrt</span>(<span class="built_in">static_cast</span>&lt;<span class="type">double</span>&gt;(dx * dx + dy * dy));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">double</span> <span class="title">length</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> std::<span class="built_in">sqrt</span>(<span class="built_in">static_cast</span>&lt;<span class="type">double</span>&gt;(x * x + y * y));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//声明静态变量</span></span><br><span class="line">	<span class="type">static</span> <span class="type">const</span> Coords ZERO;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">struct</span> <span class="title class_">std</span>::hash&lt;Coords&gt; &#123;</span><br><span class="line">	<span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> Coords&amp; c)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (std::hash&lt;<span class="type">int</span>&gt;&#123;&#125;(c.x) * <span class="number">73856093u</span>) ^ (std::hash&lt;<span class="type">int</span>&gt;&#123;&#125;(c.y) * <span class="number">19349663u</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//静态变量</span></span><br><span class="line"><span class="keyword">inline</span> <span class="type">const</span> Coords Coords::ZERO = <span class="built_in">Coords</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>​	这个类比较简单就不一一介绍了，主要思想就是实现<strong>构造&#x2F;析构函数</strong>、<strong>赋值运算符</strong>、<strong>操作运算符</strong>（方便计算），同时实现<strong>距离函数、哈希函数</strong>方便算法调用。</p>
+<h3 id="定义寻路算法基类"><a href="#定义寻路算法基类" class="headerlink" title="定义寻路算法基类"></a>定义寻路算法基类</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">SearchResult</span> </span><br><span class="line">&#123;</span><br><span class="line">    std::vector&lt;Coords&gt; visited;</span><br><span class="line">    std::vector&lt;Coords&gt; bestPath;</span><br><span class="line">    std::string LOG;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BaseSolver</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> GridType = std::vector&lt;std::vector&lt;<span class="type">int</span>&gt;&gt;;</span><br><span class="line">    <span class="keyword">using</span> PathType = std::vector&lt;Coords&gt;;</span><br><span class="line">    <span class="built_in">BaseSolver</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">BaseSolver</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> SearchResult <span class="title">operator</span><span class="params">()</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    	<span class="type">const</span> GridType&amp; Grid, </span></span></span><br><span class="line"><span class="params"><span class="function">    	<span class="type">const</span> Coords&amp; Source, </span></span></span><br><span class="line"><span class="params"><span class="function">    	<span class="type">const</span> Coords&amp; Destination)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	基类定义其实非常简单，在每个寻路算法的<code>Solver</code>中你只需要实现函数调用运算符<code>operator()</code>即可。在结果保存上，我们将会保存<strong>访问结点顺序<code>visited</code>以及最佳路径<code>bestPath</code><strong>，同时会保存字符串信息<code>LOG</code>来输出算法的</strong>度量指标</strong>以及其它关键信息。</p>
+<h3 id="实现广度优先搜索"><a href="#实现广度优先搜索" class="headerlink" title="实现广度优先搜索"></a>实现广度优先搜索</h3><p>​	<strong>BFS</strong>的实现较为简单，我们先展示其伪代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// BFS</span><br><span class="line">Input:</span><br><span class="line">	Graph Grid</span><br><span class="line">    Coords Source</span><br><span class="line">    Coords Destination</span><br><span class="line">    </span><br><span class="line">Output:</span><br><span class="line">	SearchResult sr</span><br><span class="line">	</span><br><span class="line">Algorithm:</span><br><span class="line">    Define empty queue q</span><br><span class="line">    Mark Source as visited</span><br><span class="line">    Define map f to store parent node</span><br><span class="line">    </span><br><span class="line">    Enqueue Source into q</span><br><span class="line">	hasFound = false</span><br><span class="line">	f[Source] &lt;- Source</span><br><span class="line">	</span><br><span class="line">    while q is not empty and hasFound is false:</span><br><span class="line">        node &lt;- dequeue(q)</span><br><span class="line">        for neighbor in node&#x27;s neighbors:</span><br><span class="line">            if neighbor is valid and unvisited:</span><br><span class="line">            	sr.visited.append(neighbor)</span><br><span class="line">            	f[neighbor] &lt;- node</span><br><span class="line">            	if neighbor is equal to Destination:</span><br><span class="line">            		hasFound &lt;- true</span><br><span class="line">            		break;</span><br><span class="line">                Mark neighbor as visited</span><br><span class="line">                Enqueue neighbor into q</span><br><span class="line">                </span><br><span class="line">    if hasFound:</span><br><span class="line">        sr.bestPath &lt;- reconstructPath(f, Source, Destination)</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>我们维护一个布尔值<code>hasFound</code>记录是否成功寻找终点、用一个队列记录当前访问到的结点以及用一个哈希表实现记录每个结点的父结点，首先将<code>Source</code>入队，并将其标记为已访问，其父结点为自身；</li>
+<li>当队列非空且未成功找到时，我们执行主循环，每次取出队头元素<code>node</code>，遍历其相邻结点<code>neighbor</code>：如果<code>neighbor</code>未访问且合法，则将其标记为已访问并入队，更新其父结点；<code>neighbor</code>如果等于<code>Destination</code>，则结束循环并将<code>hasFound</code>标记为<code>true</code>；</li>
+<li>检测<code>hasFound</code>状态，回溯父结点并记录最短路径并进行输出；</li>
+</ol>
+<p>​	伪代码其实比较简单，但是请注意<strong>如果我们希望输出最短路径，那么我们还需要记录每个结点的父结点，最后从终点回溯父结点并记录最短路径</strong>。在此提供个人实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SearchResult <span class="title">bfsSolver::operator</span><span class="params">()</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">       <span class="type">const</span> GridType&amp; Grid, <span class="type">const</span> Coords&amp; Source, <span class="type">const</span> Coords&amp; Destination)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SearchResult result;</span><br><span class="line">	<span class="comment">// 有效性检测</span></span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">       </span><br><span class="line">	<span class="comment">// BFS主算法实现</span></span><br><span class="line">	std::<span class="type">size_t</span> m = Grid.<span class="built_in">size</span>(), n = Grid[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">	std::vector&lt;Coords&gt;&amp; visited = result.visited;</span><br><span class="line">	std::vector&lt;Coords&gt;&amp; bestPath = result.bestPath;</span><br><span class="line">	std::unordered_map&lt;Coords, Coords&gt; f;<span class="comment">//存储父结点</span></span><br><span class="line">	std::queue&lt;Coords&gt; q;</span><br><span class="line">	q.<span class="built_in">push</span>(Source);</span><br><span class="line">	f[Source] = Source;<span class="comment">//类似并查集定义根结点</span></span><br><span class="line">	<span class="type">bool</span> hasFound = <span class="literal">false</span>;</span><br><span class="line">       </span><br><span class="line">	<span class="keyword">while</span> (!q.<span class="built_in">empty</span>() &amp;&amp; !hasFound)</span><br><span class="line">	&#123;</span><br><span class="line">		Coords coords = q.<span class="built_in">front</span>();</span><br><span class="line">		q.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (Direction dir : ALL_DIRECTIONS)<span class="comment">//枚举方向</span></span><br><span class="line">		&#123;</span><br><span class="line">			Coords newCoords = coords + <span class="built_in">getOffset</span>(dir);</span><br><span class="line">			<span class="keyword">if</span> (!<span class="built_in">isValidCoords</span>(newCoords, m, n) </span><br><span class="line">                   || Grid[newCoords.x][newCoords.y] == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">			<span class="keyword">if</span> (f.<span class="built_in">find</span>(newCoords) == f.<span class="built_in">end</span>())<span class="comment">//确保坐标有效且未被访问</span></span><br><span class="line">			&#123;</span><br><span class="line">				f[newCoords] = coords;</span><br><span class="line">				q.<span class="built_in">push</span>(newCoords);</span><br><span class="line">				visited.<span class="built_in">push_back</span>(newCoords);</span><br><span class="line">				<span class="keyword">if</span> (newCoords == Destination) <span class="comment">//如果找到目标点则结束遍历直接返回</span></span><br><span class="line">				&#123;</span><br><span class="line">					hasFound = <span class="literal">true</span>;</span><br><span class="line">					<span class="keyword">break</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 没有找到</span></span><br><span class="line">	<span class="keyword">if</span> (!hasFound) &#123;</span><br><span class="line">		result.LOG = <span class="string">&quot;Can&#x27;t Find Path From Source To Destination!&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 成功找到</span></span><br><span class="line">	bestPath = <span class="built_in">getBestPath</span>(f, Source, Destination); <span class="comment">// 回溯最短路径</span></span><br><span class="line">	<span class="type">int</span> totalCosts = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (Coords&amp; coords : bestPath)</span><br><span class="line">	&#123;</span><br><span class="line">		totalCosts += std::<span class="built_in">max</span>(<span class="number">1</span>, Grid[coords.x][coords.y]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 输出度量信息</span></span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现迪杰斯特拉算法"><a href="#实现迪杰斯特拉算法" class="headerlink" title="实现迪杰斯特拉算法"></a>实现迪杰斯特拉算法</h3><p>​	<strong>Dijkstra</strong>算法由于每次都要输出距离最小的结点值，因此我们需要采用<strong>优先队列</strong>来作为辅助数据结构。同时，我们需要记录每个坐标的代价值以便更新与迭代计算，可以采用二维代价矩阵进行保存。其它思想与BFS类似：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">// Dijkstra</span><br><span class="line">Input:</span><br><span class="line">    Graph Grid</span><br><span class="line">    Coords Source</span><br><span class="line">    Coords Destination</span><br><span class="line"></span><br><span class="line">Output:</span><br><span class="line">    SearchResult sr</span><br><span class="line"></span><br><span class="line">Algorithm:</span><br><span class="line">    Define ElementType as (distance, Coords)</span><br><span class="line">    Define min-priority-queue q</span><br><span class="line">    Define 2D array costs[m][n], initialize all to INF</span><br><span class="line">    Define map f to store parent node</span><br><span class="line">    </span><br><span class="line">    costs[Source.x][Source.y] &lt;- 0</span><br><span class="line">    f[Source] &lt;- Source</span><br><span class="line">    Enqueue (0, Source) into q</span><br><span class="line">    hasFound &lt;- false</span><br><span class="line"></span><br><span class="line">    while q is not empty:</span><br><span class="line">        (cost, node) &lt;- q.top()</span><br><span class="line">        q.pop()</span><br><span class="line"></span><br><span class="line">        if cost &gt; costs[node.x][node.y]:</span><br><span class="line">            continue </span><br><span class="line"></span><br><span class="line">        sr.visited.append(node)</span><br><span class="line"></span><br><span class="line">        if node is equal to Destination:</span><br><span class="line">            hasFound &lt;- true</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">        for neighbor in node&#x27;s neighbors:</span><br><span class="line">			if neighbor is valid:</span><br><span class="line">            	weight &lt;- max(1, Grid[neighbor.x][neighbor.y])</span><br><span class="line">            	newCost &lt;- cost + weight</span><br><span class="line"></span><br><span class="line">                if newCost &lt; costs[neighbor.x][neighbor.y]:</span><br><span class="line">                    costs[neighbor.x][neighbor.y] &lt;- newCost</span><br><span class="line">                    f[neighbor] &lt;- node</span><br><span class="line">                    q.push((newCost, neighbor))</span><br><span class="line"></span><br><span class="line">    if hasFound:</span><br><span class="line">        sr.bestPath &lt;- reconstructPath(f, Source, Destination)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>首先我们初始化<strong>基于代价的小根堆</strong><code>q</code>来维护我们的结点，同时创建<strong>二维代价矩阵</strong><code>costs</code>，以及<strong>哈希表记录父结点</strong>；</li>
+<li>当<code>q</code>非空时，取出堆顶元素<code>(cost, node)</code>，如果其<code>cost</code>小于当前记录的最小代价，那么这是<strong>过期数据，无需更新</strong>。否则将其标记为已访问，进行判断：如果<code>node==Destination</code>，那么说明我们已经找到最优路径，标记<code>hasFound</code>并结束循环；如果不等则遍历其相邻结点，如果相邻结点的记录代价值大于新的代价，则更新代价矩阵并将其入队，更新父节点。</li>
+<li>检测<code>hasFound</code>状态，回溯父结点并记录最短路径并进行输出；</li>
+</ol>
+<p>​	大致思路上和<strong>BFS</strong>相似，在此给出笔者个人实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SearchResult <span class="title">DijkstraSolver::operator</span><span class="params">()</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">const</span> GridType&amp; Grid, <span class="type">const</span> Coords&amp; Source, <span class="type">const</span> Coords&amp; Destination)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SearchResult result;</span><br><span class="line">	<span class="comment">// 有效性检测</span></span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 优先级队列初始化</span></span><br><span class="line">	<span class="keyword">using</span> ElementType = std::pair&lt;<span class="type">int</span>, Coords&gt;;</span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">Compare</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> ElementType&amp; a, <span class="type">const</span> ElementType&amp; b)</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>&#123;</span><br><span class="line">			<span class="keyword">return</span> a.first &gt; b.first;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	std::priority_queue&lt;ElementType, std::vector&lt;ElementType&gt;, Compare&gt; q;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 迪杰斯特拉</span></span><br><span class="line">	std::vector&lt;Coords&gt;&amp; visited = result.visited;</span><br><span class="line">	std::vector&lt;Coords&gt;&amp; bestPath = result.bestPath;</span><br><span class="line">	std::unordered_map&lt;Coords, Coords&gt; f; <span class="comment">// 存储父结点</span></span><br><span class="line">	std::vector&lt;std::vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">costs</span>(m, std::<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, INT_MAX));</span><br><span class="line">	q.<span class="built_in">push</span>(&#123; std::<span class="built_in">max</span>(<span class="number">1</span>, Grid[Source.x][Source.y]) ,Source &#125;);</span><br><span class="line">	f[Source] = Source;</span><br><span class="line">	costs[Source.x][Source.y] = std::<span class="built_in">max</span>(<span class="number">1</span>, Grid[Source.x][Source.y]);</span><br><span class="line">	<span class="type">bool</span> hasFound = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">auto</span> [cost, coords] = q.<span class="built_in">top</span>();</span><br><span class="line">		q.<span class="built_in">pop</span>();</span><br><span class="line">		<span class="keyword">if</span> (cost &gt; costs[coords.x][coords.y]) <span class="keyword">continue</span>;</span><br><span class="line">		visited.<span class="built_in">push_back</span>(coords);</span><br><span class="line">		<span class="keyword">if</span> (coords == Destination) &#123;</span><br><span class="line">			hasFound = <span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> (Direction dir : ALL_DIRECTIONS) <span class="comment">// 枚举方向</span></span><br><span class="line">		&#123;</span><br><span class="line">			Coords newCoords = coords + <span class="built_in">getOffset</span>(dir);</span><br><span class="line">			<span class="keyword">if</span> (!<span class="built_in">isValidCoords</span>(newCoords, m, n) </span><br><span class="line">				|| Grid[newCoords.x][newCoords.y] == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">			<span class="type">int</span> weight = std::<span class="built_in">max</span>(<span class="number">1</span>, Grid[newCoords.x][newCoords.y]);</span><br><span class="line">			<span class="type">int</span> newCost = cost + weight;</span><br><span class="line">			<span class="keyword">if</span> (newCost &lt; costs[newCoords.x][newCoords.y]) &#123;</span><br><span class="line">				costs[newCoords.x][newCoords.y] = newCost;</span><br><span class="line">				f[newCoords] = coords;</span><br><span class="line">				q.<span class="built_in">push</span>(&#123; newCost, newCoords &#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 没有找到</span></span><br><span class="line">	<span class="keyword">if</span> (!hasFound) &#123;</span><br><span class="line">		result.LOG = <span class="string">&quot;Can&#x27;t Find Path From Source To Destination!&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 成功找到</span></span><br><span class="line">	bestPath = <span class="built_in">getBestPath</span>(f, Source, Destination);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 输出度量指标</span></span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="可视化结果"><a href="#可视化结果" class="headerlink" title="可视化结果"></a>可视化结果</h2><p>​	到了检验我们算法的时候了！</p>
+<h3 id="无权网格"><a href="#无权网格" class="headerlink" title="无权网格"></a>无权网格</h3><p>​	网格中绿色为起点（左上角），红色为终点（右下角），以下视频为<strong>BFS</strong>算法，可以看到我们的BFS找到了最短的路径，同时由于是无信息探索，基本上我们访问到了每一个结点。</p>
+<div id="dplayer0" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer0"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/BFS_Normal.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+<p>​	<strong>Dijkstra</strong>算法的可视化也基本一样，找到了最优路径，但是也访问了每一个结点，这就是无信息搜索的缺点。</p>
+<div id="dplayer1" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer1"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/Dijkstra_Normal.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+<p>​	而对于存在障碍（黑色方块）的情况也基本类似，两种算法均能找到最短路径：</p>
+<div id="dplayer2" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer2"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/BFS_Ob.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+<div id="dplayer3" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer3"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/Dijkstra_Ob.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+
+
+<h3 id="正值权重网格"><a href="#正值权重网格" class="headerlink" title="正值权重网格"></a>正值权重网格</h3><p>​	而对于正值权重网格，两种算法就大不相同了。以下网格中，金黄色网格权重为8，褐色网格权重为6，深绿色网格权重为3，而浅绿色网格权重为1。</p>
+<div id="dplayer4" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer4"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/BFS_Weight.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+<p>​	上面是<strong>BFS</strong>的结果，可以看到它只是一味找最短路径，而代价并非最优。而迪杰斯特拉能够将权重进行考虑：</p>
+<div id="dplayer5" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer5"),"theme":"#FADFA3","video":{"url":"/2025/11/09/GameAlgo-02-Pathfinding01/Dijkstra_Weight.mp4"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
+
+<h3 id="度量指标统计"><a href="#度量指标统计" class="headerlink" title="度量指标统计"></a>度量指标统计</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>路径长度</strong></th>
+<th align="center">路径代价（BFS）</th>
+<th align="center">路径代价（Dijkstra）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>普通无权网格</strong></td>
+<td align="center">49</td>
+<td align="center">49</td>
+<td align="center">49</td>
+</tr>
+<tr>
+<td align="center"><strong>障碍无权网格</strong></td>
+<td align="center">49</td>
+<td align="center">49</td>
+<td align="center">49</td>
+</tr>
+<tr>
+<td align="center"><strong>正值权重网格</strong></td>
+<td align="center">49</td>
+<td align="center"><strong>181</strong></td>
+<td align="center"><strong>49</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​	本文主要是介绍了<strong>BFS</strong>、<strong>Dijkstra</strong>两种无信息搜索算法，可以看到，在无权网格的情况，两种算法都能够保证找到最短路径；但是在有权网格上，<strong>BFS</strong>不能得到最优路径，路径的代价值一般花费更大，而<strong>Dijkstra</strong>能够找到最小代价路径。</p>
+<p>​	回到我们开头的问题，如果让你设计红色幽灵的寻路算法，你会选择哪一种呢？</p>
+<blockquote>
+<p>个人实现：<a target="_blank" rel="noopener" href="https://github.com/Pomelover/Pathfinding-Algorithm">Pomelover&#x2F;Pathfinding-Algorithm: My Pathfinding Algorithm</a></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/">https://pomelover.github.io/2025/11/09/GameAlgo-02-Pathfinding01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B4%97%E7%89%8C%E7%AE%97%E6%B3%95/">洗牌算法</a><a class="post-meta__tags" href="/tags/%E6%B8%B8%E6%88%8F%E7%AE%97%E6%B3%95/">游戏算法</a></div><div class="post-share"><div class="social-share" data-image="/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/11/09/Design-01-SOLID/" title="01.SOLID原则"><img class="cover" src="/2025/11/09/Design-01-SOLID/OOP.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">01.SOLID原则</div></div><div class="info-2"><div class="info-item-1">本文是个人学习设计模式的第一次总结，主要介绍了SOLID原则并提供了示例进行说明。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/10/18/GameAlgo-01-Shuffle/" title="洗牌算法学习与实现"><img class="cover" src="/2025/10/18/GameAlgo-01-Shuffle/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-18</div><div class="info-item-2">洗牌算法学习与实现</div></div><div class="info-2"><div class="info-item-1">本文基于voidmatrix的相关视频，介绍了梅森旋转算法与多种洗牌算法，并提供了个人实现。</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E4%B8%AD%E7%9A%84%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%97%A0%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2"><span class="toc-number">1.</span> <span class="toc-text">游戏中的寻路算法（一）：无信息搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">简要介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.2.</span> <span class="toc-text">算法介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2"><span class="toc-number">1.2.1.</span> <span class="toc-text">无信息搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">广度优先搜索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">迪杰斯特拉算法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">算法实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%85%B7%E4%BD%93%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.1.</span> <span class="toc-text">定义具体问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%9D%90%E6%A0%87%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.2.</span> <span class="toc-text">创建坐标数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%E5%9F%BA%E7%B1%BB"><span class="toc-number">1.3.3.</span> <span class="toc-text">定义寻路算法基类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="toc-number">1.3.4.</span> <span class="toc-text">实现广度优先搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.5.</span> <span class="toc-text">实现迪杰斯特拉算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">可视化结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%9D%83%E7%BD%91%E6%A0%BC"><span class="toc-number">1.4.1.</span> <span class="toc-text">无权网格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%80%BC%E6%9D%83%E9%87%8D%E7%BD%91%E6%A0%BC"><span class="toc-number">1.4.2.</span> <span class="toc-text">正值权重网格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%A6%E9%87%8F%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.4.3.</span> <span class="toc-text">度量指标统计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/09/GameAlgo-02-Pathfinding01/" title="游戏中的寻路算法（一）："><img src="/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="游戏中的寻路算法（一）："/></a><div class="content"><a class="title" href="/2025/11/09/GameAlgo-02-Pathfinding01/" title="游戏中的寻路算法（一）：">游戏中的寻路算法（一）：</a><time datetime="2025-11-09T08:22:18.000Z" title="发表于 2025-11-09 16:22:18">2025-11-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/09/Design-01-SOLID/" title="01.SOLID原则"><img src="/2025/11/09/Design-01-SOLID/OOP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="01.SOLID原则"/></a><div class="content"><a class="title" href="/2025/11/09/Design-01-SOLID/" title="01.SOLID原则">01.SOLID原则</a><time datetime="2025-11-08T22:46:54.123Z" title="发表于 2025-11-09 06:46:54">2025-11-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/18/GameAlgo-01-Shuffle/" title="洗牌算法学习与实现"><img src="/2025/10/18/GameAlgo-01-Shuffle/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="洗牌算法学习与实现"/></a><div class="content"><a class="title" href="/2025/10/18/GameAlgo-01-Shuffle/" title="洗牌算法学习与实现">洗牌算法学习与实现</a><time datetime="2025-10-18T08:21:22.000Z" title="发表于 2025-10-18 16:21:22">2025-10-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/2025/11/09/GameAlgo-02-Pathfinding01/top_img.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="/"></script></div></body></html>
