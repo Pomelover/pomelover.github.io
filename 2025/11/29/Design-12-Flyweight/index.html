@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>（十二）结构型模式：享元模式 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="享元模式简介​	享元模式是一种结构型设计模式，它摒弃了在每个对象中保存所有数据的方式， 通过共享多个对象所共有的相同状态， 让你能在有限的内存容量中载入更多对象。  具体问题分析​	我们假设现在需要在游戏场景里构造一片森林，森林里会有成千上万的树木，我们如下定义树木： 12345678910111213class Tree &#123;public:    int x, y;          &#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（十二）结构型模式：享元模式">
+<meta property="og:url" content="https://pomelover.github.io/2025/11/29/Design-12-Flyweight/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="享元模式简介​	享元模式是一种结构型设计模式，它摒弃了在每个对象中保存所有数据的方式， 通过共享多个对象所共有的相同状态， 让你能在有限的内存容量中载入更多对象。  具体问题分析​	我们假设现在需要在游戏场景里构造一片森林，森林里会有成千上万的树木，我们如下定义树木： 12345678910111213class Tree &#123;public:    int x, y;          &#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/images/DesignPattern/Flyweight.png">
+<meta property="article:published_time" content="2025-11-29T04:12:49.616Z">
+<meta property="article:modified_time" content="2025-11-29T06:11:48.449Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="设计模式">
+<meta property="article:tag" content="结构型模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/images/DesignPattern/Flyweight.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "（十二）结构型模式：享元模式",
+  "url": "https://pomelover.github.io/2025/11/29/Design-12-Flyweight/",
+  "image": "https://pomelover.github.io/images/DesignPattern/Flyweight.png",
+  "datePublished": "2025-11-29T04:12:49.616Z",
+  "dateModified": "2025-11-29T06:11:48.449Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://pomelover.github.io/2025/11/29/Design-12-Flyweight/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '（十二）结构型模式：享元模式',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-flash.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div id="web_bg" style="background-image: url(/images/pages/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">（十二）结构型模式：享元模式</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">（十二）结构型模式：享元模式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-29T04:12:49.616Z" title="发表于 2025-11-29 12:12:49">2025-11-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-29T06:11:48.449Z" title="更新于 2025-11-29 14:11:48">2025-11-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0/">设计模式学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">975</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​	<strong>享元模式</strong>是一种结构型设计模式，它摒弃了在每个对象中保存所有数据的方式， 通过<strong>共享多个对象所共有的相同状态</strong>， 让你能在有限的内存容量中载入更多对象。</p>
+<hr>
+<h2 id="具体问题分析"><a href="#具体问题分析" class="headerlink" title="具体问题分析"></a>具体问题分析</h2><p>​	我们假设现在需要在游戏场景里构造一片森林，森林里会有成千上万的树木，我们如下定义树木：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Tree</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> x, y;          <span class="comment">// 位置</span></span><br><span class="line">    Mesh mesh;         <span class="comment">// 模型</span></span><br><span class="line">    Texture texture;   <span class="comment">// 纹理</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">Tree</span>(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">const</span> Mesh&amp; m, <span class="type">const</span> Texture&amp; t)</span><br><span class="line">        : <span class="built_in">x</span>(x), <span class="built_in">y</span>(y), <span class="built_in">mesh</span>(m), <span class="built_in">texture</span>(t) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">draw</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	问题来了，一片森林树木数量实在太多了，如果每棵树我们都保存其模型、纹理信息，那么资源所占内存空间将会十分大，导致游戏运行卡顿等问题。</p>
+<hr>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>​	其实我们可以分析，一片森林中其实大致可以将树木分为几类，每个类别树木所用的模型、纹理其实是重复的，那么我们就可以通过享元模式思想来进行优化：</p>
+<p>​	享元模式最主要需要你分清楚共享的范围：</p>
+<ol>
+<li><strong>外部状态，不能共享，不同对象不同；</strong></li>
+<li><strong>内部状态，能够共享，对象之间相同；</strong></li>
+</ol>
+<p>​	上面的例子我们就可以将树木位置作为外部状态，而模型与纹理为内部状态，将内部状态进行共享，构建享元类：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 享元类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TreeType</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    string name;</span><br><span class="line">    Mesh mesh;</span><br><span class="line">    Texture texture;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">TreeType</span>(<span class="type">const</span> string&amp; name,</span><br><span class="line">             <span class="type">const</span> Mesh&amp; mesh,</span><br><span class="line">             <span class="type">const</span> Texture&amp; texture)</span><br><span class="line">        : <span class="built_in">name</span>(name), <span class="built_in">mesh</span>(mesh), <span class="built_in">texture</span>(texture) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">draw</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>​	通过享元类（<code>TreeType</code>），我们可以精简<code>Tree</code>类，只需要保留位置信息与共享的内部状态：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Tree</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> x, y;          <span class="comment">// 外部状态：位置</span></span><br><span class="line">    TreeType* type;    <span class="comment">// 指向共享的内部状态</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">Tree</span>(<span class="type">int</span> x, <span class="type">int</span> y, TreeType* type)</span><br><span class="line">        : <span class="built_in">x</span>(x), <span class="built_in">y</span>(y), <span class="built_in">type</span>(type) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">draw</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        type-&gt;<span class="built_in">draw</span>(x, y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​	这样每棵树对象本身内存大大减少。</p>
+<p>​	我们还可以通过工厂类来管理与复用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 享元工厂类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TreeFactory</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">static</span> map&lt;string, TreeType*&gt; types; <span class="comment">// 根据 name 缓存</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> TreeType* <span class="title">getTreeType</span><span class="params">(<span class="type">const</span> string&amp; name,</span></span></span><br><span class="line"><span class="params"><span class="function">                                 <span class="type">const</span> Mesh&amp; mesh,</span></span></span><br><span class="line"><span class="params"><span class="function">                                 <span class="type">const</span> Texture&amp; texture)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> it = types.<span class="built_in">find</span>(name);</span><br><span class="line">        <span class="keyword">if</span> (it != types.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> it-&gt;second;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        TreeType* type = <span class="keyword">new</span> <span class="built_in">TreeType</span>(name, mesh, texture);</span><br><span class="line">        types[name] = type;</span><br><span class="line">        <span class="keyword">return</span> type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; kv : types) &#123;</span><br><span class="line">            <span class="keyword">delete</span> kv.second;</span><br><span class="line">        &#125;</span><br><span class="line">        types.<span class="built_in">clear</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">map&lt;string, TreeType*&gt; TreeFactory::types;</span><br></pre></td></tr></table></figure>
+
+<p>​	通过享元类与享元工厂，构建一个森林我们即可使用以下方式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createForest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">Mesh <span class="title">pineMesh</span><span class="params">(<span class="string">&quot;PineMesh&quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">Texture <span class="title">pineTex</span><span class="params">(<span class="string">&quot;pine.png&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 先问工厂要“松树类型”</span></span><br><span class="line">    TreeType* pineType = TreeFactory::<span class="built_in">getTreeType</span>(<span class="string">&quot;Pine&quot;</span>, pineMesh, pineTex);</span><br><span class="line">    vector&lt;Tree&gt; forest;</span><br><span class="line">    <span class="comment">// 2. 每棵树只保存位置 + 指向 pineType</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> x = <span class="comment">// ...;</span></span><br><span class="line">        <span class="type">int</span> y = <span class="comment">// ...;</span></span><br><span class="line">        forest.<span class="built_in">emplace_back</span>(x, y, pineType);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 3. 绘制</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; t : forest) &#123;</span><br><span class="line">        t.<span class="built_in">draw</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 最后程序退出前清理享元对象（示例）</span></span><br><span class="line">    TreeFactory::<span class="built_in">clear</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><ol>
+<li>区分类成员变量为<strong>内部状态</strong>与<strong>外部状态</strong>；</li>
+<li><strong>保留类中表示内在状态的成员变量， 并将其属性设置为不可修改</strong>；</li>
+<li>找到所有使用外在状态成员变量的方法， 为在方法中所用<strong>的每个成员变量新建一个参数</strong>， 并使用该参数代替成员变量；</li>
+<li>你可以<strong>有选择地创建工厂类来管理享元缓存池</strong>， 它负责在新建享元时检查已有的享元；</li>
+<li>客户端必须存储和计算外在状态 （情景） 的数值， 因为只有这样才能调用享元对象的方法；</li>
+</ol>
+<hr>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>节省大量内存</td>
+<td>代码会变得更加复杂。</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>牺牲执行速度来换取内存.</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/flyweight">享元设计模式</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2025/11/29/Design-12-Flyweight/">https://pomelover.github.io/2025/11/29/Design-12-Flyweight/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><a class="post-meta__tags" href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/">结构型模式</a></div><div class="post-share"><div class="social-share" data-image="/images/DesignPattern/Flyweight.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2025/11/29/Design-13-Proxy/" title="（十三）结构型模式：代理模式"><img class="cover" src="/images/DesignPattern/Proxy.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">（十三）结构型模式：代理模式</div></div></div></a><a class="pagination-related  no-desc" href="/2025/11/29/Design-11-Facade/" title="（十一）结构型模式：外观模式"><img class="cover" src="/images/DesignPattern/Facade.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">（十一）结构型模式：外观模式</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2025/11/26/Design-07-Wrapper/" title="（七）结构型模式：适配器模式"><img class="cover" src="/images/DesignPattern/Wrapper.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-26</div><div class="info-item-2">（七）结构型模式：适配器模式</div></div></div></a><a class="pagination-related no-desc" href="/2025/11/27/Design-08-Bridge/" title="（八）结构型模式：桥接模式"><img class="cover" src="/images/DesignPattern/Bridge.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-27</div><div class="info-item-2">（八）结构型模式：桥接模式</div></div></div></a><a class="pagination-related no-desc" href="/2025/11/29/Design-10-Decorator/" title="（十）结构型模式：装饰器模式"><img class="cover" src="/images/DesignPattern/Decorator.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-29</div><div class="info-item-2">（十）结构型模式：装饰器模式</div></div></div></a><a class="pagination-related no-desc" href="/2025/11/28/Design-09-Composite/" title="（九）结构型模式：组合模式"><img class="cover" src="/images/DesignPattern/Composite.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-28</div><div class="info-item-2">（九）结构型模式：组合模式</div></div></div></a><a class="pagination-related no-desc" href="/2025/11/29/Design-11-Facade/" title="（十一）结构型模式：外观模式"><img class="cover" src="/images/DesignPattern/Facade.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-29</div><div class="info-item-2">（十一）结构型模式：外观模式</div></div></div></a><a class="pagination-related no-desc" href="/2025/11/29/Design-13-Proxy/" title="（十三）结构型模式：代理模式"><img class="cover" src="/images/DesignPattern/Proxy.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-29</div><div class="info-item-2">（十三）结构型模式：代理模式</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">享元模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">具体问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.5.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">参考引用</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/29/Design-13-Proxy/" title="（十三）结构型模式：代理模式"><img src="/images/DesignPattern/Proxy.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（十三）结构型模式：代理模式"/></a><div class="content"><a class="title" href="/2025/11/29/Design-13-Proxy/" title="（十三）结构型模式：代理模式">（十三）结构型模式：代理模式</a><time datetime="2025-11-29T05:31:17.981Z" title="发表于 2025-11-29 13:31:17">2025-11-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/29/Design-12-Flyweight/" title="（十二）结构型模式：享元模式"><img src="/images/DesignPattern/Flyweight.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（十二）结构型模式：享元模式"/></a><div class="content"><a class="title" href="/2025/11/29/Design-12-Flyweight/" title="（十二）结构型模式：享元模式">（十二）结构型模式：享元模式</a><time datetime="2025-11-29T04:12:49.616Z" title="发表于 2025-11-29 12:12:49">2025-11-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/29/Design-11-Facade/" title="（十一）结构型模式：外观模式"><img src="/images/DesignPattern/Facade.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（十一）结构型模式：外观模式"/></a><div class="content"><a class="title" href="/2025/11/29/Design-11-Facade/" title="（十一）结构型模式：外观模式">（十一）结构型模式：外观模式</a><time datetime="2025-11-29T03:23:49.571Z" title="发表于 2025-11-29 11:23:49">2025-11-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/29/Design-10-Decorator/" title="（十）结构型模式：装饰器模式"><img src="/images/DesignPattern/Decorator.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（十）结构型模式：装饰器模式"/></a><div class="content"><a class="title" href="/2025/11/29/Design-10-Decorator/" title="（十）结构型模式：装饰器模式">（十）结构型模式：装饰器模式</a><time datetime="2025-11-29T01:20:13.206Z" title="发表于 2025-11-29 09:20:13">2025-11-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/28/Design-09-Composite/" title="（九）结构型模式：组合模式"><img src="/images/DesignPattern/Composite.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（九）结构型模式：组合模式"/></a><div class="content"><a class="title" href="/2025/11/28/Design-09-Composite/" title="（九）结构型模式：组合模式">（九）结构型模式：组合模式</a><time datetime="2025-11-28T13:50:00.349Z" title="发表于 2025-11-28 21:50:00">2025-11-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="/"></script></div></body></html>
