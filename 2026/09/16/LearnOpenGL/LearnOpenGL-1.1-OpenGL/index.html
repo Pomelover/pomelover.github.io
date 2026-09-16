@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>1.1 OpenGL | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.1 OpenGL 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　在开始这段旅程之前，需要先弄清楚 OpenGL 到底是什么。 　　通常它被认为是一个 API（Application Programming Interface，应用程序编程接口），其中包含一系列可以操作图形、图像的函数。但这个说法并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.1 OpenGL">
+<meta property="og:url" content="https://pomelover.github.io/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="1.1 OpenGL 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　在开始这段旅程之前，需要先弄清楚 OpenGL 到底是什么。 　　通常它被认为是一个 API（Application Programming Interface，应用程序编程接口），其中包含一系列可以操作图形、图像的函数。但这个说法并">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/images/jinx.webp">
+<meta property="article:published_time" content="2026-09-16T14:46:56.000Z">
+<meta property="article:modified_time" content="2026-09-16T15:17:33.450Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="LearnOpenGL">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/images/jinx.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "1.1 OpenGL",
+  "url": "https://pomelover.github.io/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/",
+  "image": "https://pomelover.github.io/images/jinx.webp",
+  "datePublished": "2026-09-16T14:46:56.000Z",
+  "dateModified": "2026-09-16T15:17:33.450Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://pomelover.github.io/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/7.1.0/files/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '1.1 OpenGL',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div id="web_bg" style="background-image: url(/images/pages/background.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">1.1 OpenGL</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">1.1 OpenGL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-16T14:46:56.000Z" title="发表于 2026-09-16 22:46:56">2026-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-16T15:17:33.450Z" title="更新于 2026-09-16 23:17:33">2026-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LearnOpenGL/">LearnOpenGL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="1-1-OpenGL"><a href="#1-1-OpenGL" class="headerlink" title="1.1 OpenGL"></a>1.1 OpenGL</h1><blockquote>
+<p>学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 <a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">learnopengl-cn.github.io</a>。</p>
+</blockquote>
+<p>　　在开始这段旅程之前，需要先弄清楚 OpenGL 到底是什么。</p>
+<p>　　通常它被认为是一个 <code>API</code>（Application Programming Interface，应用程序编程接口），其中包含一系列可以操作图形、图像的函数。但这个说法并不准确：</p>
+<blockquote>
+<p>OpenGL 本身并不是一个 <code>API</code>，它仅仅是一个由 <strong>Khronos 组织</strong>制定并维护的<strong>规范</strong>（Specification）。</p>
+</blockquote>
+<p>　　规范严格规定了每个函数该如何执行，以及它们的输出值；至于内部具体每个函数是如何<strong>实现</strong>（Implement）的，则由 OpenGL 库的开发者自行决定（译注：这里的「开发者」指的是编写 OpenGL 库的人）。</p>
+<p>　　正因如此，具体的 OpenGL 库可以使用不同的实现，只要其功能和结果与规范相匹配即可——也就是说，作为用户不会感受到功能上的差异。</p>
+<p>　　实际的 OpenGL 库的开发者通常就是显卡生产商：所购买的显卡支持哪个 OpenGL 版本，取决于针对该系列显卡专门开发的库。在 Apple 系统上，OpenGL 库由 Apple 自身维护；在 Linux 下，则既有显卡生产商提供的版本，也有一些爱好者改编的版本。</p>
+<p>　　这也意味着，任何时候 OpenGL 库表现出的行为与规范不一致时，基本都是库的开发者留下的 bug。</p>
+<blockquote>
+<p><strong>Tip</strong>：这与 DirectX 形成对照——DirectX 由微软一家制定并主导，规范与实现的边界更集中；而 OpenGL 的规范由 Khronos 联盟制定、实现分散在各家驱动里，因此「同一段代码在不同驱动上行为略有出入」在 OpenGL 生态中更常见。游戏引擎往往同时维护 OpenGL / DirectX / Vulkan 多个图形后端，原因之一就在这里。</p>
+</blockquote>
+<h2 id="1-1-1-核心模式与立即渲染模式"><a href="#1-1-1-核心模式与立即渲染模式" class="headerlink" title="1.1.1 核心模式与立即渲染模式"></a>1.1.1 核心模式与立即渲染模式</h2><p>　　早期的 OpenGL 使用<strong>立即渲染模式</strong>（Immediate mode），也就是通常所说的<strong>固定渲染管线</strong>。这个模式下绘制图形很方便，但 OpenGL 的大多数功能都被库隐藏了起来，开发者很少有控制 OpenGL 如何进行计算的自由。</p>
+<p>　　开发者迫切希望能有更多的灵活性。随着时间推移，规范越来越灵活，开发者对绘图细节也有了更多的掌控。</p>
+<p>　　立即渲染模式确实容易使用和理解，但效率太低。因此从 OpenGL 3.2 开始，规范文档开始<strong>废弃</strong>立即渲染模式，并鼓励开发者在<strong>核心模式</strong>（Core-profile）下进行开发——这个分支的规范完全移除了旧的特性。</p>
+<p>　　在核心模式下，OpenGL 强制要求使用<strong>现代函数</strong>。一旦调用了某个已废弃的函数，OpenGL 就会抛出错误并终止绘图。</p>
+<p>　　现代函数的优势是更高的灵活性和效率，代价则是更难学习。立即渲染模式从 OpenGL 的实际运作中抽象掉了大量细节，因此它容易学习，却很难让人把握 OpenGL 究竟是如何运作的。</p>
+<p>　　现代函数要求使用者真正理解 OpenGL 和图形编程，它有一定难度，但提供了更高的灵活性、更高的效率——更重要的是，能够更深入地理解图形编程。</p>
+<blockquote>
+<p><strong>Tip</strong>：这条路线的下一站是 Vulkan——它不止移除旧特性，而是连 OpenGL 那套<strong>全局状态机</strong>也一并取消：对象由应用显式创建和持有，绘制命令先录制进命令缓冲，显存分配与 CPU/GPU 同步也全部交给应用自己管理。核心模式虽然迫使开发者使用现代函数，却仍然保留了「先绑定、再操作」的全局状态模型；Vulkan 则要求把每一步都写清楚。灵活性与使用成本同步上升，这个趋势其实在本节就已经埋下了。</p>
+</blockquote>
+<h2 id="1-1-2-扩展"><a href="#1-1-2-扩展" class="headerlink" title="1.1.2 扩展"></a>1.1.2 扩展</h2><p>　　OpenGL 的一大特性就是对<strong>扩展</strong>（Extension）的支持。当某个显卡公司提出一项新特性或者一项渲染上的重大优化时，通常会以扩展的形式在驱动中先行实现。</p>
+<p>　　只要程序运行在支持该扩展的显卡上，开发者就可以使用它提供的更先进、更高效的图形功能。通过这种方式，开发者不必等待新的 OpenGL 规范面世，就能使用新的渲染特性——只需要简单地检查一下显卡是否支持该扩展即可。</p>
+<p>　　通常，当一个扩展非常流行或者非常有用时，它最终会成为未来 OpenGL 规范的一部分。</p>
+<p>　　使用扩展的代码大多看上去如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(GL_ARB_extension_name)</span><br><span class="line">{</span><br><span class="line">    <span class="comment">// 使用硬件支持的全新的现代特性</span></span><br><span class="line">}</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// 不支持此扩展：用旧的方式去做</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：扩展的命名前缀暴露了它的来历——<code>ARB</code> 表示由 Khronos 的架构评审委员会（Architecture Review Board）审定，这类扩展最有可能进入核心规范；<code>EXT</code> 表示由多家厂商共同支持；<code>NV</code>、<code>AMD</code>、<code>INTEL</code> 则属于某一家厂商的专属扩展；<code>OES</code> 来自 OpenGL ES。以后在头文件或文档里看到 <code>GL_ARB_...</code> 这类名字，就能大致判断它的成熟度与适用范围。</p>
+</blockquote>
+<h2 id="1-1-3-状态机"><a href="#1-1-3-状态机" class="headerlink" title="1.1.3 状态机"></a>1.1.3 状态机</h2><p>　　OpenGL 自身就是一个巨大的<strong>状态机</strong>（State Machine）：一系列变量描述了 OpenGL 此刻应当如何运行。这些状态通常被称为 OpenGL 的<strong>上下文</strong>（Context）。</p>
+<p>　　更改状态的途径通常是设置选项与操作缓冲；完成这些设置之后，便用当前的 OpenGL 上下文来渲染。</p>
+<p>　　使用 OpenGL 时，会遇到两类函数：<strong>状态设置函数</strong>（State-changing Function）会改变上下文，<strong>状态使用函数</strong>（State-using Function）则根据当前 OpenGL 的状态执行相应操作。只要记住 OpenGL 本质上是个大状态机，就能更容易理解它的大部分特性。</p>
+<blockquote>
+<p><strong>Tip</strong>：全局状态带来一个长期麻烦：绘制调用之间会互相影响。某处忘了把状态改回去，出错的位置可能离真正的原因很远——这类 bug 极难定位，因为「现场」和「凶手」被隔开了。工程上的对策不是小心翼翼，而是<strong>不依赖残留状态</strong>：绘制每个物体之前显式设置它需要的全部状态，再按状态给绘制排序以减少切换开销。游戏引擎渲染器中的「状态排序」与「批处理」，动机正在于此。</p>
+</blockquote>
+<h2 id="1-1-4-对象"><a href="#1-1-4-对象" class="headerlink" title="1.1.4 对象"></a>1.1.4 对象</h2><p>　　OpenGL 库是用 C 语言编写的，同时也支持从它派生出的多种语言，但其内核仍然是一个 C 库。由于 C 的一些语言结构不易被翻译到其他高级语言，OpenGL 在开发时引入了一些<strong>抽象层</strong>，<strong>对象</strong>（Object）就是其中之一。</p>
+<p>　　在 OpenGL 中，一个对象指的是一些选项的集合，它代表 OpenGL 状态的一个子集。例如，可以用一个对象来表示绘图窗口的设置，之后便可以设置它的大小、支持的颜色位数等等。对象可以看作一个 C 风格的结构体（Struct）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">object_name</span> {</span><br><span class="line">    <span class="type">float</span>  option1;</span><br><span class="line">    <span class="type">int</span>    option2;</span><br><span class="line">    <span class="type">char</span>[] name;</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+
+<p>　　使用一个对象时，通常看起来像下面这样（把 OpenGL 上下文看作一个大的结构体）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// OpenGL的状态</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">OpenGL_Context</span> {</span><br><span class="line">    ...</span><br><span class="line">    object* object_Window_Target;</span><br><span class="line">    ...</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> objectId = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">glGenObject</span>(<span class="number">1</span>, &amp;objectId);</span><br><span class="line"><span class="comment">// 绑定对象至上下文</span></span><br><span class="line"><span class="built_in">glBindObject</span>(GL_WINDOW_TARGET, objectId);</span><br><span class="line"><span class="comment">// 设置当前绑定到 GL_WINDOW_TARGET 的对象的一些选项</span></span><br><span class="line"><span class="built_in">glSetObjectOption</span>(GL_WINDOW_TARGET, GL_OPTION_WINDOW_WIDTH, <span class="number">800</span>);</span><br><span class="line"><span class="built_in">glSetObjectOption</span>(GL_WINDOW_TARGET, GL_OPTION_WINDOW_HEIGHT, <span class="number">600</span>);</span><br><span class="line"><span class="comment">// 将上下文对象设回默认</span></span><br><span class="line"><span class="built_in">glBindObject</span>(GL_WINDOW_TARGET, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　这一小段代码展现了以后使用 OpenGL 时常见的工作流。首先创建一个对象，并用一个 id 保存它的引用（实际数据被储存在后台）。然后将对象绑定至上下文的目标位置（例子中窗口对象目标的位置被定义成 <code>GL_WINDOW_TARGET</code>），接下来设置窗口的选项。最后将目标位置的对象 id 设回 0，解绑这个对象。设置的选项会被保存在 <code>objectId</code> 所引用的对象中，一旦重新绑定这个对象到 <code>GL_WINDOW_TARGET</code> 位置，这些选项就会重新生效。</p>
+<p>　　使用对象的一个好处是：在程序中可以定义不止一个对象，并分别设置它们的选项，每个对象都可以有不同的设置。</p>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>　　OpenGL 并不是一个 API，而是由 Khronos 制定并维护的<strong>规范</strong>；理解规范与实现的分工，是理解后续所有特性的前提。</p>
+<ul>
+<li><strong>规范与实现分离</strong>：规范只约束函数的行为与输出值，实现细节由各家自行决定。实际的实现来自显卡厂商的驱动、Apple 自维护的版本，以及 Linux 上各类改编版本；行为与规范不符时，基本都是实现者留下的 bug。</li>
+<li><strong>核心模式与立即渲染模式</strong>：立即渲染模式（固定管线）易学易用，但功能被库隐藏、可控性差、效率低；OpenGL 3.2 起被废弃，核心模式完全移除旧特性并强制使用现代函数，门槛更高，灵活性与效率也更高。</li>
+<li><strong>扩展</strong>：厂商的新特性与重大优化以扩展形式先落在驱动中，无须等待新规范即可使用，只需检查显卡是否支持；足够流行或有用之后，扩展会被并入规范。</li>
+<li><strong>状态机</strong>：OpenGL 是一个巨大的状态机，一系列变量描述了它此刻应当如何运行，这些状态即<strong>上下文</strong>；函数分为改变上下文的<strong>状态设置函数</strong>与依据当前状态执行操作的<strong>状态使用函数</strong>。</li>
+<li><strong>对象</strong>：对象是状态的一个子集，用 id 引用，可以看作 C 风格的结构体；使用套路是创建 → 绑定至上下文的目标位置 → 设置选项 → 解绑，选项保存在对象中，重新绑定即重新生效。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/">https://pomelover.github.io/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LearnOpenGL/">LearnOpenGL</a><a class="post-meta__tags" href="/tags/OpenGL/">OpenGL</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post-share"><div class="social-share" data-image="/images/jinx.webp" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2026/09/15/MythicalManMonth/MythicalManMonth-02/" title="（二）人月神话"><img class="cover" src="/2026/09/15/MythicalManMonth/MythicalManMonth-02/manmonth.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading='lazy'><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">（二）人月神话</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-1-OpenGL"><span class="toc-number">1.</span> <span class="toc-text">1.1 OpenGL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-1-%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%BC%8F%E4%B8%8E%E7%AB%8B%E5%8D%B3%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">1.1.1 核心模式与立即渲染模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-2-%E6%89%A9%E5%B1%95"><span class="toc-number">1.2.</span> <span class="toc-text">1.1.2 扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-3-%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="toc-number">1.3.</span> <span class="toc-text">1.1.3 状态机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-4-%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.4.</span> <span class="toc-text">1.1.4 对象</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/" title="1.1 OpenGL">1.1 OpenGL</a><time datetime="2026-09-16T14:46:56.000Z" title="发表于 2026-09-16 22:46:56">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑"><img src="/2026/09/15/MythicalManMonth/MythicalManMonth-01/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（一）焦油坑"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑">（一）焦油坑</a><time datetime="2026-09-14T16:00:00.000Z" title="发表于 2026-09-15 00:00:00">2026-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/15/MythicalManMonth/MythicalManMonth-02/" title="（二）人月神话"><img src="/2026/09/15/MythicalManMonth/MythicalManMonth-02/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（二）人月神话"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/15/MythicalManMonth/MythicalManMonth-02/" title="（二）人月神话">（二）人月神话</a><time datetime="2026-09-14T16:00:00.000Z" title="发表于 2026-09-15 00:00:00">2026-09-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/05/CppPrimer/CppPrimer-15/" title="第十六章：模板与泛型编程"><img src="/images/cpp_logo.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第十六章：模板与泛型编程"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/01/05/CppPrimer/CppPrimer-15/" title="第十六章：模板与泛型编程">第十六章：模板与泛型编程</a><time datetime="2026-01-05T15:16:46.471Z" title="发表于 2026-01-05 23:16:46">2026-01-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/30/CppPrimer/CppPrimer-14/" title="第十五章：面向对象程序设计"><img src="/images/cpp_logo.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第十五章：面向对象程序设计"/ loading='lazy'></a><div class="content"><a class="title" href="/2025/12/30/CppPrimer/CppPrimer-14/" title="第十五章：面向对象程序设计">第十五章：面向对象程序设计</a><time datetime="2025-12-30T13:54:00.507Z" title="发表于 2025-12-30 21:54:00">2025-12-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="https://registry.npmmirror.com/instant.page/5.2.0/files/instantpage.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
