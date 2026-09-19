@@ -1,0 +1,405 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>（三）外科手术队伍 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第 3 章 外科手术队伍 读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。   3.1 问题　　在一项研究中，Sackman、Erikson 和 Grand 曾对一组具有经验的程序人员进行测量。在该小组中，表现最好者与最差者在生产率上平均相差 10:1；在运行速度和空间占用上，差异同样惊人，达到 5:1。  Tip：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（三）外科手术队伍">
+<meta property="og:url" content="https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="第 3 章 外科手术队伍 读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。   3.1 问题　　在一项研究中，Sackman、Erikson 和 Grand 曾对一组具有经验的程序人员进行测量。在该小组中，表现最好者与最差者在生产率上平均相差 10:1；在运行速度和空间占用上，差异同样惊人，达到 5:1。  Tip：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp">
+<meta property="article:published_time" content="2026-09-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-19T14:58:06.808Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="人月神话">
+<meta property="article:tag" content="软件工程">
+<meta property="article:tag" content="团队组织">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "（三）外科手术队伍",
+  "url": "https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/",
+  "image": "https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp",
+  "datePublished": "2026-09-18T16:00:00.000Z",
+  "dateModified": "2026-09-19T14:58:06.808Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/7.1.0/files/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '（三）外科手术队伍',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div id="web_bg" style="background-image: url(/images/pages/background.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">56</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">（三）外科手术队伍</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">（三）外科手术队伍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-18T16:00:00.000Z" title="发表于 2026-09-19 00:00:00">2026-09-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-19T14:58:06.808Z" title="更新于 2026-09-19 22:58:06">2026-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%BA%E6%9C%88%E7%A5%9E%E8%AF%9D/">人月神话</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="第-3-章-外科手术队伍"><a href="#第-3-章-外科手术队伍" class="headerlink" title="第 3 章 外科手术队伍"></a>第 3 章 外科手术队伍</h1><blockquote>
+<p>读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。</p>
+</blockquote>
+<hr>
+<h1 id="3-1-问题"><a href="#3-1-问题" class="headerlink" title="3.1 问题"></a>3.1 问题</h1><p>　　在一项研究中，Sackman、Erikson 和 Grand 曾对一组具有经验的程序人员进行测量。在该小组中，表现最好者与最差者在<strong>生产率</strong>上平均相差 <strong>10:1</strong>；在<strong>运行速度</strong>和<strong>空间</strong>占用上，差异同样惊人，达到 <strong>5:1</strong>。</p>
+<blockquote>
+<p><strong>Tip</strong>：个体差异达到这个量级，意味着“平均水平的程序人员”是一个相当粗糙的假设——用人数乘以平均生产率来推算团队产出，会把方差完全抹掉。这也是本章随后要讨论团队组织问题的起点：既然人员能力相差如此悬殊，队伍的构型就不只是人事安排。</p>
+</blockquote>
+<p>　　参与协作与沟通的人员数量，直接影响着开发成本。因为成本的主要组成部分正是相互的沟通和交流，以及更正沟通不当所引起的不良结果——也就是<strong>系统调试</strong>。这一点也暗示：系统应该由尽可能少的人员来开发。</p>
+<p>　　实际上，绝大多数大型编程系统的经验都显示出，<strong>一拥而上</strong>的开发方法是高成本的、速度缓慢的、不充分的，开发出的是无法在<strong>概念上</strong>进行集成的产品。</p>
+<blockquote>
+<p><strong>Tip</strong>：这里首次点出“概念上的集成”，它是第 4 章讨论<strong>概念完整性</strong>的前奏——人数越多，各人头脑中的构思越难合成一个统一的设计；而下文给出的外科手术队伍，正是一种在“需要多种专长”与“必须保持概念统一”之间取得折中的组织方式。</p>
+</blockquote>
+<p>　　由此得出的结论很简单：如果一个 200 人的项目中，有 25 个最能干和最有开发经验的项目经理，那么开除剩下的 175 名程序员，让项目经理来编程开发。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一推论直接建立在前面 10:1 的比例上——按该比例，25 名顶尖人员的产出足以覆盖其余 175 人的工作量，它把“系统应该由尽可能少的人员开发”推到了极端形式。值得注意的是，这个结论之所以显得可行，前提是把人员视作可按生产率倍数相互替换的等价单位，而这正是第 2 章刚刚否定过的假设；Brooks 随后要说明的是，现实中队伍规模无法这样简单地压缩。</p>
+</blockquote>
+<p>　　现在来验证一下这个解决方案。一方面，原有的开发队伍并不是理想的小型而强有力的团队：通常的共识是团队规模不超过 10 个人，而该团队的规模如此之大，以至于至少需要两层的管理，或者说大约 5 名管理人员。另外，它还需要额外的财务、人员、空间、文秘和机器操作方面的支持。</p>
+<blockquote>
+<p><strong>Tip</strong>：5 名管理者对应 200 人的编制，比例约 1:40，说明管理开销本身也是队伍规模的函数——压缩编程人力并不能压缩这部分支持性角色。这里的“不超过 10 个人”，也正是本章后半段外科手术队伍编制（约 10 人）所沿用的经验上限。</p>
+</blockquote>
+<p>　　另一方面，如果采用一拥而上的开发方法，那么原有 200 人的队伍仍然不足以开发真正的大型系统。以 <strong>OS/360</strong> 项目为例：在顶峰时，有超过 1000 人在为它工作——程序员、文档编制人员、操作人员、职员、秘书、管理人员、支持小组等等。从 1963 年到 1966 年，设计、编码和文档工作花费了大约 <strong>5000 人年</strong>。如果人月可以等量置换，那么所假设的 200 人队伍需要 25 年的时间，才能使产品达到现有的水平。</p>
+<blockquote>
+<p><strong>Tip</strong>：<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="15.964ex" height="1.692ex" role="img" focusable="false" viewBox="0 -666 7056 748"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(1000,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(1500,0)"></path></g><g data-mml-node="mo" transform="translate(2222.2,0)"><path data-c="F7" d="M318 466Q318 500 339 518T386 537Q418 537 438 517T458 466Q458 438 440 417T388 396Q355 396 337 417T318 466ZM56 237T56 250T70 270H706Q721 262 721 250T706 230H70Q56 237 56 250ZM318 34Q318 68 339 86T386 105Q418 105 438 85T458 34Q458 6 440 -15T388 -36Q355 -36 337 -15T318 34Z"></path></g><g data-mml-node="mn" transform="translate(3222.4,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(1000,0)"></path></g><g data-mml-node="mo" transform="translate(5000.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(6056,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z" transform="translate(500,0)"></path></g></g></g></svg></mjx-container>，这个除法只是把第 2 章否定的“人月可等量置换”用到极致后得到的归谬结果，并非真实可行的排期。OS/360 是 Brooks 亲自参与的项目，全书大量经验与数据都来自它，这也是书中例子如此具体的原因。</p>
+</blockquote>
+<p>　　这就是小型、精干队伍概念上的问题：对于真正意义上的大型系统，它太慢了。设想 OS/360 的工作由一个小型、精干的团队来解决，譬如一支 10 人队伍。作为一个尺度，假设他们都非常厉害，在编程和文档方面的生产率比一般的编程人员高 7 倍；同时假定 OS/360 原有的开发人员是一些平庸的编程人员（这与实际情况相差很远）。再假设另一个生产率改进因子又提高了 7 倍，因为较小的队伍需要较少的沟通和交流。那么，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.816ex;" xmlns="http://www.w3.org/2000/svg" width="11.964ex" height="2.773ex" role="img" focusable="false" viewBox="0 -864.9 5288 1225.5"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mfrac"><g data-mml-node="mn" transform="translate(770.1,394) scale(0.707)"><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(1000,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(1500,0)"></path></g><g data-mml-node="mrow" transform="translate(220,-345) scale(0.707)"><g data-mml-node="mn"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(1000,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(1778,0)"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path></g><g data-mml-node="mo" transform="translate(2278,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(3056,0)"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path></g></g><rect width="2714.5" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(3232.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(4288,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path></g></g></g></svg></mjx-container>，他们需要 10 年才能完成这 5000 人年的工作。一个产品在最初设计的 10 年后才出现，还有人会对它感兴趣吗？或者它是否会随着软件开发技术的快速进步，而显得过时呢？</p>
+<blockquote>
+<p><strong>Tip</strong>：两个 7 倍分别代表顶尖人员的能力优势与小队伍节省下来的沟通开销，这条估算已经把有利条件开到了极限——人才最强、对手平庸、沟通最少，结果仍需 10 年，因此它给出的是“小型精干队伍不足以承担大型系统”的上界。这恰好又回到第 1 章“产品在完成之时已显得陈旧”的那条苦恼。</p>
+</blockquote>
+<p>　　这种进退两难的境地是非常残酷的：就效率和<strong>概念的完整性</strong>而言，最好由少数干练的人员来设计和开发；而对于大型系统，则需要大量的人手，以使产品能在时间上满足要求。如何调和这两方面的矛盾呢？</p>
+<blockquote>
+<p><strong>Tip</strong>：这一问正是本章余下部分的引子——答案不是取两端之一，而是把“设计与概念的所有权”和“人力规模”拆开处理，本章后面给出的外科手术队伍就是这种调和方案。</p>
+</blockquote>
+<hr>
+<h1 id="3-2-Mills-的建议"><a href="#3-2-Mills-的建议" class="headerlink" title="3.2 Mills 的建议"></a>3.2 Mills 的建议</h1><p>　　Harlan Mills 的提议提供了一个崭新的、创造性的解决方案：大型项目的每一个部分由一个团队来解决，但该队伍以类似<strong>外科手术</strong>的方式组建，而并非一拥而上。</p>
+<blockquote>
+<p><strong>Tip</strong>：要点在于分工方式的改变——不是把同一件工作切成若干份分给所有人，而是像手术团队那样按职责配备不同角色，沟通路径因此集中到主刀医生一人身上，不会按第 2 章那条 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.781ex;" xmlns="http://www.w3.org/2000/svg" width="6.204ex" height="3.15ex" role="img" focusable="false" viewBox="0 -1047.1 2742.3 1392.1"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mfrac"><g data-mml-node="mrow" transform="translate(220,516.8) scale(0.707)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(600,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(989,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(1589,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mn" transform="translate(2367,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(2867,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mn" transform="translate(1194.4,-345) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><rect width="2502.3" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container> 的曲线膨胀。</p>
+</blockquote>
+<p>　　也就是说，与每个成员各自截取问题某个部分的做法相反：由一个人来进行问题的分解，其他人则给予他所需要的支持，以提高效率和生产力。</p>
+<blockquote>
+<p><strong>Tip</strong>：把<strong>分解权</strong>收归一人，正回应了 3.1 结尾提出的“概念上的完整性”——设计出自一个头脑，其他人扩展的是产能，而不是各自带入一套构思。</p>
+</blockquote>
+<p>　　简单考虑一下，如果上述概念能够得到实施，它似乎可以满足迫切性的需要：很少的人员被包含在设计和开发中，其他许多人则来进行工作的支持。那么，它是否可行呢？谁是编程队伍中的<strong>麻醉医生</strong>和<strong>护士</strong>，工作如何划分？不妨继续使用医生的比喻：如果考虑所有可能想到的工作，这样的队伍应该如何运作。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一问把讨论从“要不要少数人做设计”转成了“围绕主刀医生需要哪些支持角色”，下一节给出的正是这样一份角色清单——每个角色的取舍，都要以“它是否分担了主刀医生的工作量，同时不介入设计”来衡量。</p>
+</blockquote>
+<hr>
+<h1 id="3-3-外科手术队伍"><a href="#3-3-外科手术队伍" class="headerlink" title="3.3 外科手术队伍"></a>3.3 外科手术队伍</h1><p>　　<strong>外科医生</strong>（Mills 称之为<strong>首席程序员</strong>）：他亲自定义功能和性能技术说明书，设计程序，编制源代码，测试以及书写技术文档。他使用例如 PL/I 的结构化编程语言，拥有对计算机系统的访问能力；该计算机系统不仅仅能进行测试，还存储程序的各种版本，以允许简单的文件更新，并对他的文档提供文本编辑能力。首席程序员需要极高的天分、十年的经验和应用数学、业务数据处理或其他方面的大量系统和应用知识。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一角色要同时覆盖设计、编码、测试与文档的全流程，因此“极高的天分加十年经验”实际上是把最稀缺的人放在了最长的链路上。句中那三项系统能力——结构化编程语言、版本存储与文档文本编辑，在今天已是版本控制与 IDE 的标配，而在当时是需要为主刀专门争取的资源。</p>
+</blockquote>
+<p>　　<strong>副手</strong>：他是外科医生的后备，能完成任何一部分工作，但经验相对较少。他的主要作用是作为设计的<strong>思考者、讨论者和评估人员</strong>——外科医生试图和他沟通设计，但不受到他建议的限制。副手经常在与其他团队的功能和接口讨论中代表自己的小组，他需要详细了解所有的代码，研究设计策略的备选方案。显然，他充当外科医生的<strong>保险机制</strong>；他甚至可能编制代码，但针对代码的任何部分，都不承担具体的开发职责。</p>
+<blockquote>
+<p><strong>Tip</strong>：副手的关键设定是“有评审权、无否决权”：设计讨论因而仍是单向的，概念完整性不会被稀释；同时对外沟通被移交给副手，跨团队的接口协调从主刀身上卸了下来。现实中的对应物，往往是架构师身边那位熟悉全部代码、负责对外对齐的备份负责人。</p>
+</blockquote>
+<p>　　<strong>管理员</strong>：外科医生是老板，他必须在人员、加薪等方面具有决定权，但他决不能在这些事务上浪费任何时间。因此，他需要一个控制财务、人员、工作地点安排和机器的专业管理人员，该管理员充当与组织中其他管理机构的接口。Baker 建议，仅在项目具有法律、合同、报表和财务方面的需求时，管理员才具有全职责任；否则，一个管理员可以为两个团队服务。</p>
+<blockquote>
+<p><strong>Tip</strong>：这里把<strong>决定权</strong>与<strong>时间开销</strong>拆开了——主刀保留人事上的决策权，否则他对团队的权威并不完整；而执行与对外对接交给专职管理员。一名管理员可服务两个团队这一比例，也是外科手术队伍的整体编制能维持在 10 人左右的原因之一。</p>
+</blockquote>
+<p>　　<strong>编辑</strong>：外科医生负责产生文档——出于最大清晰度的考虑，他必须书写文档，对内部描述和外部描述都是如此。而编辑根据外科医生的草稿或者口述的手稿，进行分析和重新组织，提供各种参考信息和书目，对多个版本进行维护以及监督文档生成的机制。</p>
+<blockquote>
+<p><strong>Tip</strong>：与副手同一条逻辑：内容必须出自主刀，否则文档会变成对设计的再解释；编辑只负责表达、组织与版本维护。这也是“他必须书写文档”不能被外包的原因——文档与代码同源，才谈得上概念完整。</p>
+</blockquote>
+<p>　　<strong>两个秘书</strong>：管理员和编辑每个人需要一个秘书。管理员的秘书负责项目的协作一致和非产品文件。</p>
+<p>　　<strong>程序职员</strong>：他负责维护编程产品库中所有团队的技术记录。该职员接受秘书性质的培训，承担机器码文件和可读文件的相关管理责任。所有的计算机输入汇集到这个职员处，如果需要，他会对它们进行记录或者标识；输出列表会提交给程序职员，由他进行归档和编制索引。另外，他负责将任何模型的最新运行情况记录在状态日志中，而所有以前的结果则按时间顺序进行归档保存。</p>
+<blockquote>
+<p><strong>Tip</strong>：程序职员其实就是<strong>源码库与配置管理</strong>的雏形——他守着团队的技术记录、机器可读与可读文件的版本。今天这部分职责大多由版本控制系统和构建流水线接管，但“哪些文件算正式记录、以哪一版为准”仍需有人负责。</p>
+</blockquote>
+<p>　　Mills 概念的真正关键，是<strong>从个人艺术到公共实践</strong>的编程观念转换：它向所有的团队成员展现所有计算机的运作和产物，并将所有的程序和数据看作是团队的所有物，而非私人财产。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一点是前几个角色能够成立的前提——只有当程序与数据属于团队，程序职员的记录、编辑的版本维护、副手对全部代码的了解才有意义；代码若被视为私人作品，任何交接都得依赖原作者，团队一扩张，成本立刻回到第 2 章的沟通开销上。</p>
+</blockquote>
+<p>　　程序职员的专业化分工，使程序员从书记的杂事中解放出来；同时还可以对那些杂事进行系统整理，确保了它们的质量，并强化了团队最有价值的财富——<strong>工作产品</strong>。</p>
+<blockquote>
+<p><strong>Tip</strong>：这与第 1 章“概念设计有趣、找 bug 与琐事重复”的苦恼正相对应：把事务性工作交给专人，省下的不只是时间，还让这些记录有了统一的标准与责任人，主刀因而可以把精力集中在设计上。</p>
+</blockquote>
+<p>　　<strong>工具维护人员</strong>：现在已经有很多文件编辑、文本编辑和交互式调试等工具，因此团队很少再需要自己的机器和机器操作人员。但是这些工具使用起来必须毫无疑问地令人满意，而且需要具备较高的可靠性。外科医生是这些工具、服务可用性的唯一评判人员，他需要一个工具维护人员，保证所有基本服务的可靠性，以及承担团队成员所需要的特殊工具（特别是交互式计算机服务）的构建、维护和升级责任。</p>
+<blockquote>
+<p><strong>Tip</strong>：角色的规模之所以能压下来，一个前提是机器、编辑器这类基础设施已由组织提供，团队只需养一名保障者。“外科医生是唯一评判人员”也延续了同一原则——工具好不好用不靠投票，因为工具的任何迟滞都直接消耗主刀自己的时间。</p>
+</blockquote>
+<p>　　<strong>测试人员</strong>：外科医生需要大量合适的测试用例，用来对他所编写的工作片段，以及对整个工作进行测试。因此，测试人员既是为他的各个功能设计系统测试用例的<strong>对头</strong>，同时也是为他的日常调试设计测试数据的助手。他还负责计划测试的步骤和为测试搭建测试平台。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一角色把第 2 章 2.3 的结论落到了组织层面——测试时间必须提前预留、缺陷数量又无法预知，因此测试用例需要由主刀之外的人独立设计；否则“自己测自己”只会重复他已有的假设和盲区。这正是今天独立测试与代码评审的雏形。</p>
+</blockquote>
+<p>　　<strong>语言专家</strong>：随着 Algol 语言的出现，人们开始认识到大多数计算机项目中，总有一两个乐于掌握复杂编程语言的人。这些专家非常有帮助，很快大家会向他咨询。这些天才不同于外科医生——外科医生主要是系统设计者以及考虑系统的整体表现，而语言专家则寻找一种简洁、有效的使用语言的方法来解决复杂、晦涩或者棘手的问题。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一角色填的是“主刀的时间无法覆盖所有语言细节”的缺口；与副手、测试人员一样，他提升的是实现质量，而不掌握设计权。现实中的对应物是平台与语言方向的专家、性能优化或编译构建方向的同事。</p>
+</blockquote>
+<p><img src="/2026/09/19/MythicalManMonth/MythicalManMonth-03/surgical-team-roles.webp" alt="外科手术队伍的角色分工与 10 人编制" loading='lazy'></p>
+<blockquote>
+<p><strong>Tip</strong>：图中把外科手术队伍的九个角色按“设计与专业能力 / 文档与事务 / 工程保障”三类归位，括号中的 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="3.769ex" height="1.545ex" role="img" focusable="false" viewBox="0 -683 1666 683"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mi" transform="translate(778,0)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g></g></g></svg></mjx-container> 为编制人数，合计 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="18.102ex" height="1.692ex" role="img" focusable="false" viewBox="0 -666 8000.9 748"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(722.2,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(1722.4,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g><g data-mml-node="mo" transform="translate(2444.7,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(3444.9,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g><g data-mml-node="mo" transform="translate(4167.1,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(5167.3,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><g data-mml-node="mo" transform="translate(5945.1,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(7000.9,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(500,0)"></path></g></g></g></svg></mjx-container> 人；所有协作关系都汇聚到外科医生一人，而不是一拥而上时 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 600 453"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></g></g></svg></mjx-container> 个人之间的 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.781ex;" xmlns="http://www.w3.org/2000/svg" width="6.204ex" height="3.15ex" role="img" focusable="false" viewBox="0 -1047.1 2742.3 1392.1"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mfrac"><g data-mml-node="mrow" transform="translate(220,516.8) scale(0.707)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(600,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(989,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(1589,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mn" transform="translate(2367,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(2867,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mn" transform="translate(1194.4,-345) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><rect width="2502.3" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container> 条两两通道。管理员与编辑可由两个团队共享，因此实际编制常常略少于此。</p>
+</blockquote>
+<hr>
+<h1 id="3-4-如何运作"><a href="#3-4-如何运作" class="headerlink" title="3.4 如何运作"></a>3.4 如何运作</h1><p>　　文中定义的开发团队在很多方面满足了迫切性的需要。十个人，其中七个专业人士在解决问题；而系统是一个人或者最多两个人思考的产物，因此客观上达到了<strong>概念的一致性</strong>。</p>
+<blockquote>
+<p><strong>Tip</strong>：这一节正是 3.1 结尾那个两难的兑现——“由尽可能少的人思考”与“由足够多的人出力”同时成立：人力规模由十人的编制保证，概念的所有权却只留在一两个人的头脑里。“概念的一致性”也是第 4 章要正面展开的主题。</p>
+</blockquote>
+<p>　　要特别注意传统的<strong>两人队伍</strong>与外科医生—副手队伍架构之间的区别。首先，传统的团队将工作进行划分，每人负责一部分工作的设计和实现；而在外科手术团队中，外科医生和副手都了解所有的设计和全部的代码。</p>
+<p>　　第二，在传统的队伍中大家是平等的。出现观点的差异时，不可避免地需要讨论、进行相互的妥协和让步；由于工作和资源的分解，不同的意见还会造成策略和接口上的不一致——例如谁的空间会被用作缓冲区，然而最终它们必须整合在一起。而在外科手术团队中，不存在利益的差别，观点的不一致由外科医生单方面来统一。</p>
+<blockquote>
+<p><strong>Tip</strong>：这两点其实是同一主题的两面——传统平等队伍里“分歧靠协商和让步”解决，而协商正是第 2 章那条沟通成本与“接口不一致”的来源；外科手术队伍用<strong>单点决策</strong>把整套开销消掉了。今天的对应物是<strong>主架构师（chief architect）</strong>评审，以及开源项目里的 <strong>BDFL</strong>（仁慈的终身独裁者）模型——同样把最终裁决权收归一人。</p>
+</blockquote>
+<p>　　另外，团队中剩余人员职能的专业化分工是高效的关键，它使成员之间采用非常简单的交流模式成为可能。</p>
+<p><img src="/2026/09/19/MythicalManMonth/MythicalManMonth-03/fig3-1-communication-patterns.png" alt="图 3.1：10 人程序开发队伍的沟通模式" loading='lazy'></p>
+<blockquote>
+<p><strong>Tip</strong>：图中粗线连向外科医生与副手，表示这两个角色之间的交流最频繁、最密切；其余角色都由细线连接，各自只与主刀保持简单、低频的沟通。管理员与编辑各向下带一名秘书，这两条支线上不再出现与外科医生的直接往来——专业化分工把整支队伍的沟通路径压成了以主刀为端点的星形结构。</p>
+</blockquote>
+<hr>
+<h1 id="3-5-团队的扩建"><a href="#3-5-团队的扩建" class="headerlink" title="3.5 团队的扩建"></a>3.5 团队的扩建</h1><p>　　就目前情况而言，还不错。然而，现在所面临的问题是如何完成 <strong>5000 人年</strong>的项目，而不是 20 或 30 人年规模的系统。如果整个工作能控制在范围之内，10 人的团队无论如何组织，总是比较高效的。但是，当我们需要面对几百人参与的大型任务时，如何应用外科手术团队的概念呢？</p>
+<blockquote>
+<p><strong>Tip</strong>：这一节把尺度问题重新摆上台面——此前的论证都建立在“一个系统、一支 10 人队伍”的前提上，而 OS/360 量级的任务意味着几十支这样的队伍。问题于是从“队伍内部如何分工”变成了“队伍之间如何组织”，第 2 章的沟通成本与 3.1 提出的概念一致性张力会在这一层重新出现。</p>
+</blockquote>
+<p>　　扩建过程的成功，依赖于这样一个事实：每个部分的<strong>概念完整性</strong>都得到了彻底的提高——决定设计的人员是原来的七分之一或更少。因此，可以让 200 人去解决问题，而仅仅需要协调 20 个人的思路，即那些“<strong>外科医生</strong>”。</p>
+<blockquote>
+<p><strong>Tip</strong>：可扩展性的算术就在这里——200 人划分为约 20 支 10 人队伍后，需要协调的只有 20 名外科医生的思路。按第 2 章的 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.781ex;" xmlns="http://www.w3.org/2000/svg" width="6.204ex" height="3.15ex" role="img" focusable="false" viewBox="0 -1047.1 2742.3 1392.1"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mfrac"><g data-mml-node="mrow" transform="translate(220,516.8) scale(0.707)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(600,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(989,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(1589,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mn" transform="translate(2367,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(2867,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mn" transform="translate(1194.4,-345) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><rect width="2502.3" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container> 计数，沟通路径从 200 人的近两万条降到 20 人之间的 190 条，数量级随<strong>队伍数</strong>而非总人数增长。代价是这 20 支队伍内部都得真的做到“概念出自一个头脑”，否则这个比例只是账面数字。</p>
+</blockquote>
+<p>　　对于协调的问题，还是需要使用<strong>分解</strong>的技术，这在后续的章节中会继续进行讨论。在这里可以认为，整个系统必须具备概念上的完整性，要有一个<strong>系统结构师</strong>从上至下地进行所有的设计。要使工作易于管理，必须清晰地划分<strong>体系结构设计</strong>和<strong>实现</strong>之间的界线，系统结构师必须一丝不苟地专注于体系结构。总的说来，上述的角色分工和技术是可行的，在实际工作中具有非常高的效率。</p>
+<blockquote>
+<p><strong>Tip</strong>：这里第一次引出<strong>系统结构师</strong>这一角色，并把“体系结构设计”与“实现”明确切开——多支队伍之所以能被协调，靠的正是由体系结构预先定义的接口，而不是队伍之间的逐个协商。这一分工也是第 4 章讨论概念完整性的直接铺垫。</p>
+</blockquote>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>　　本章从个体差异与沟通成本出发，说明大型系统既不能靠人海战术，也无法由小型精干队伍独自承担，最终给出以<strong>外科手术队伍</strong>为基本单元的组织方案。</p>
+<ul>
+<li><strong>问题</strong>：个体生产率差异可达 10:1，而参与协作的人员数量直接推高沟通成本，因此系统应由尽可能少的人开发；但 200 人的常规队伍不足以承担真正的大型系统，10 人的精干队伍完成 5000 人年又需要 10 年——效率与<strong>概念的完整性</strong>、人力规模之间形成两难。</li>
+<li><strong>Mills 的建议</strong>：大型项目的每一部分由一支队伍解决，队伍按外科手术的方式组建；由一个人进行问题的分解，其他人给予支持，把分解权与概念的所有权收归一人。</li>
+<li><strong>外科手术队伍</strong>：编制为外科医生（首席程序员）、副手、管理员、编辑、两个秘书、程序职员、工具维护人员、测试人员、语言专家共 10 人；其观念前提是程序与数据属于团队而非私人财产，专业化分工把程序员从书记的杂事中解放出来。</li>
+<li><strong>如何运作</strong>：十个人中七个专业人士在解决问题，系统是一或两个人思考的产物，客观上达到了<strong>概念的一致性</strong>；与传统的平等队伍不同，外科医生与副手了解全部设计与代码，观点的分歧由外科医生单方面统一，沟通模式因此简化为以主刀为端点的星形结构（图 3.1）。</li>
+<li><strong>团队的扩建</strong>：以 10 人队伍为可复制单元，200 人可分为约 20 支队伍，只需协调 20 名“外科医生”的思路；同时整个系统必须具备概念上的完整性，由<strong>系统结构师</strong>从上至下进行设计，并清晰划分体系结构设计与实现之间的界线。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/">https://pomelover.github.io/2026/09/19/MythicalManMonth/MythicalManMonth-03/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%BA%E6%9C%88%E7%A5%9E%E8%AF%9D/">人月神话</a><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a><a class="post-meta__tags" href="/tags/%E5%9B%A2%E9%98%9F%E7%BB%84%E7%BB%87/">团队组织</a></div><div class="post-share"><div class="social-share" data-image="/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">1.3 你好，三角形</div></div></div></a><a class="pagination-related  no-desc" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.2-HelloWindow/" title="1.2 你好，窗口"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">1.2 你好，窗口</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑"><img class="cover" src="/2026/09/15/MythicalManMonth/MythicalManMonth-01/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">（一）焦油坑</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/15/MythicalManMonth/MythicalManMonth-02/" title="（二）人月神话"><img class="cover" src="/2026/09/15/MythicalManMonth/MythicalManMonth-02/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">（二）人月神话</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">56</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-3-%E7%AB%A0-%E5%A4%96%E7%A7%91%E6%89%8B%E6%9C%AF%E9%98%9F%E4%BC%8D"><span class="toc-number">1.</span> <span class="toc-text">第 3 章 外科手术队伍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-1-%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">3.1 问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-2-Mills-%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">3.2 Mills 的建议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-3-%E5%A4%96%E7%A7%91%E6%89%8B%E6%9C%AF%E9%98%9F%E4%BC%8D"><span class="toc-number">4.</span> <span class="toc-text">3.3 外科手术队伍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-4-%E5%A6%82%E4%BD%95%E8%BF%90%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">3.4 如何运作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-5-%E5%9B%A2%E9%98%9F%E7%9A%84%E6%89%A9%E5%BB%BA"><span class="toc-number">6.</span> <span class="toc-text">3.5 团队的扩建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形">1.3 你好，三角形</a><time datetime="2026-09-19T17:01:56.000Z" title="发表于 2026-09-20 01:01:56">2026-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/19/MythicalManMonth/MythicalManMonth-03/" title="（三）外科手术队伍"><img src="/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（三）外科手术队伍"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/19/MythicalManMonth/MythicalManMonth-03/" title="（三）外科手术队伍">（三）外科手术队伍</a><time datetime="2026-09-18T16:00:00.000Z" title="发表于 2026-09-19 00:00:00">2026-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.2-HelloWindow/" title="1.2 你好，窗口">1.2 你好，窗口</a><time datetime="2026-09-16T15:31:16.000Z" title="发表于 2026-09-16 23:31:16">2026-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/" title="1.1 OpenGL">1.1 OpenGL</a><time datetime="2026-09-16T14:46:56.000Z" title="发表于 2026-09-16 22:46:56">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑"><img src="/2026/09/15/MythicalManMonth/MythicalManMonth-01/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（一）焦油坑"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑">（一）焦油坑</a><time datetime="2026-09-14T16:00:00.000Z" title="发表于 2026-09-15 00:00:00">2026-09-15</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="https://registry.npmmirror.com/instant.page/5.2.0/files/instantpage.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
