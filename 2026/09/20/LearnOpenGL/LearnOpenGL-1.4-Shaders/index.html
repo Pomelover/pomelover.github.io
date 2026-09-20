@@ -1,0 +1,487 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>1.4 着色器 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.4 着色器 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　着色器（Shader）是运行在 GPU 上的小程序，它们各自为图形渲染管线的某个特定部分而运行。从基本意义上说，着色器只是一种把输入转化为输出的程序。 　　着色器同时也是非常独立的程序，因为它们之间不能相互通信——彼此之间唯一的沟通只有通过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.4 着色器">
+<meta property="og:url" content="https://pomelover.github.io/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="1.4 着色器 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　着色器（Shader）是运行在 GPU 上的小程序，它们各自为图形渲染管线的某个特定部分而运行。从基本意义上说，着色器只是一种把输入转化为输出的程序。 　　着色器同时也是非常独立的程序，因为它们之间不能相互通信——彼此之间唯一的沟通只有通过">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/images/jinx.webp">
+<meta property="article:published_time" content="2026-09-20T13:27:09.000Z">
+<meta property="article:modified_time" content="2026-09-20T13:59:02.131Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="LearnOpenGL">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/images/jinx.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "1.4 着色器",
+  "url": "https://pomelover.github.io/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/",
+  "image": "https://pomelover.github.io/images/jinx.webp",
+  "datePublished": "2026-09-20T13:27:09.000Z",
+  "dateModified": "2026-09-20T13:59:02.131Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://pomelover.github.io/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/7.1.0/files/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '1.4 着色器',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div id="web_bg" style="background-image: url(/images/pages/background.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">1.4 着色器</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">1.4 着色器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-20T13:27:09.000Z" title="发表于 2026-09-20 21:27:09">2026-09-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-20T13:59:02.131Z" title="更新于 2026-09-20 21:59:02">2026-09-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LearnOpenGL/">LearnOpenGL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">7.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="1-4-着色器"><a href="#1-4-着色器" class="headerlink" title="1.4 着色器"></a>1.4 着色器</h1><blockquote>
+<p>学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 <a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">learnopengl-cn.github.io</a>。</p>
+</blockquote>
+<p>　　<strong>着色器</strong>（Shader）是运行在 GPU 上的小程序，它们各自为图形渲染管线的某个特定部分而运行。从基本意义上说，着色器只是一种把输入转化为输出的程序。</p>
+<p>　　着色器同时也是非常独立的程序，因为它们之间不能相互通信——彼此之间唯一的沟通只有通过输入和输出。</p>
+<blockquote>
+<p><strong>Tip</strong>：这里的「独立」有两层含义。一是<strong>阶段之间</strong>：顶点着色器的结果只能通过声明的 <code>out</code> 交给后续阶段，任何两个阶段的着色器都无法直接读写对方的变量（1.3 中链接出错，正是因为这条唯一的通路没对上名字与类型）。二是<strong>同一阶段内部</strong>：一个阶段里成千上万个着色器实例由 GPU 并行执行同一份代码，彼此不能共享局部变量，也不能互相等待或累加——需要在多个顶点、片段之间汇总数据时，只能由 CPU 侧的 <code>uniform</code>、纹理，或者变换反馈（Transform Feedback）、原子操作一类显式机制来完成。</p>
+</blockquote>
+<h2 id="1-4-1-GLSL"><a href="#1-4-1-GLSL" class="headerlink" title="1.4.1 GLSL"></a>1.4.1 GLSL</h2><p>　　着色器是使用一种叫做 <strong>GLSL</strong> 的类 C 语言写成的。GLSL 是为图形计算量身定制的，它包含一些针对向量和矩阵操作的有用特性。</p>
+<blockquote>
+<p><strong>Tip</strong>：这些特性的直接体现是内置类型与函数：<code>vec2</code>/<code>vec3</code>/<code>vec4</code>、<code>mat2</code>～<code>mat4</code> 等类型，逐分量的算术与 <code>swizzle</code>（如 <code>pos.xyz</code>、<code>color.rgb</code>），矩阵乘向量写起来就是 <code>mat4 * vec4</code>，以及 <code>dot</code>、<code>cross</code>、<code>normalize</code>、<code>reflect</code>、<code>mix</code> 这类内置函数——它们大多直接映射到 GPU 的一条指令甚至硬件单元。反过来，GLSL 也没有指针、递归、动态内存分配，且必须给出确定的循环边界，因为同一份代码要在成千上万个实例上并行执行。写惯 C++ 后可以把它理解成「只留下数值计算的那部分 C，再补上一整套向量/矩阵语法」。</p>
+</blockquote>
+<p>　　着色器的开头总是要声明版本，接着是输入和输出变量、<code>uniform</code> 和 <code>main</code> 函数。每个着色器的入口点都是 <code>main</code> 函数，在这个函数中所有的输入变量被处理，结果被输出到输出变量中。</p>
+<p>　　一个典型的着色器有下面的结构：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version version_number</span></span><br><span class="line"><span class="keyword">in</span> type in_variable_name;</span><br><span class="line"><span class="keyword">in</span> type in_variable_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> type out_variable_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">uniform</span> type uniform_name;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">  <span class="comment">// 处理输入并进行一些图形操作</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 输出处理过的结果到输出变量</span></span><br><span class="line">  out_variable_name = weird_stuff_we_processed;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：这套结构在 1.3 的顶点着色器里已经出现过一遍——<code>#version 330 core</code>、<code>layout (location = 0) in vec3 aPos</code>，再到 <code>main</code> 里的 <code>gl_Position = ...</code>。需要留意的是，<code>in</code>、<code>out</code>、<code>uniform</code> 这类变量都声明在<strong>函数之外的全局作用域</strong>，不能在 <code>main</code> 里临时声明；<code>main</code> 本身没有返回值，结果一律靠给 <code>out</code> 变量（或顶点着色器的内置输出）赋值传出。另外 <code>#version</code> 必须是源文件里的第一条有效语句，只能有注释和空行在它前面，否则编译直接失败。</p>
+</blockquote>
+<p>　　当特别谈论到顶点着色器的时候，每个输入变量也叫<strong>顶点属性</strong>（Vertex Attribute）。能够声明的顶点属性是有上限的，它一般由硬件来决定。OpenGL 确保至少有 16 个包含 4 分量的顶点属性可用，但有些硬件或许允许更多的顶点属性，查询 <code>GL_MAX_VERTEX_ATTRIBS</code> 即可获取具体的上限：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> nrAttributes;</span><br><span class="line"><span class="built_in">glGetIntegerv</span>(GL_MAX_VERTEX_ATTRIBS, &amp;nrAttributes);</span><br><span class="line">std::cout &lt;&lt; <span class="string">"Maximum nr of vertex attributes supported: "</span> &lt;&lt; nrAttributes &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：这个上限约束的是 <code>layout (location = N)</code> 里位置值的可用范围，也就是 1.3 中 <code>glVertexAttribPointer</code> 第一个参数的取值上限——编号一旦超出，着色器链接或属性配置就会失败。另外要留意「16 个包含 4 分量的属性」是按位置值计的：<code>vec3</code> 属性虽然只用 3 个分量，但同样独占一个位置值，而 <code>mat4</code> 这类矩阵属性会连续占用 4 个位置值。真到属性不够用时，通常是把多个小属性打包进一个 <code>vec4</code>、在着色器里再拆开，而不是奢望硬件给得更多。</p>
+</blockquote>
+<h2 id="1-4-2-数据类型"><a href="#1-4-2-数据类型" class="headerlink" title="1.4.2 数据类型"></a>1.4.2 数据类型</h2><p>　　和其他编程语言一样，GLSL 也有数据类型，用来指定变量的种类。GLSL 中包含 C 等其它语言大部分的默认基础数据类型：<code>int</code>、<code>float</code>、<code>double</code>、<code>uint</code> 和 <code>bool</code>。GLSL 也有两种容器类型，它们在后文中会使用很多，分别是<strong>向量</strong>（Vector）和<strong>矩阵</strong>（Matrix）。</p>
+<blockquote>
+<p><strong>Tip</strong>：这些基础类型与 C++ 的名称相同，脾气却不大一样。GLSL 基本不做隐式类型转换——整数与浮点混算会直接编译失败，必须显式写出构造函数，如 <code>float(i)</code>、<code>int(f)</code>、<code>vec3(1.0f, 0.5f, 0.2f)</code>；<code>bool</code> 也只有 <code>true</code>/<code>false</code> 两个字面量，没有 C 的「非 0 即真」。另外 <code>uint</code> 是 GLSL 1.30 之后才加入的类型，在需要按位运算或作为整型顶点属性上传时才会用到。</p>
+</blockquote>
+<h3 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h3><p>　　GLSL 中的向量是一个可以包含有 2、3 或者 4 个分量的容器，分量的类型可以是前面默认基础类型中的任意一个。它们可以是下面的形式（<code>n</code> 代表分量的数量）：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vecn</code></td>
+<td>包含 <code>n</code> 个 <code>float</code> 分量的默认向量</td>
+</tr>
+<tr>
+<td><code>bvecn</code></td>
+<td>包含 <code>n</code> 个 <code>bool</code> 分量的向量</td>
+</tr>
+<tr>
+<td><code>ivecn</code></td>
+<td>包含 <code>n</code> 个 <code>int</code> 分量的向量</td>
+</tr>
+<tr>
+<td><code>uvecn</code></td>
+<td>包含 <code>n</code> 个 <code>unsigned int</code> 分量的向量</td>
+</tr>
+<tr>
+<td><code>dvecn</code></td>
+<td>包含 <code>n</code> 个 <code>double</code> 分量的向量</td>
+</tr>
+</tbody></table>
+<p>　　大多数时候使用 <code>vecn</code>，因为 <code>float</code> 足够满足大多数要求了。</p>
+<blockquote>
+<p><strong>Tip</strong>：分量个数与类型都写在类型名里，因此向量是一族固定长度的类型而非模板：分量数决定后缀，类型由前缀区分，写成 <code>bvec4</code> 就是「4 个布尔分量」。这种「长度固定」是它与 <code>std::vector</code> 的根本区别——它更像一个小的定长数组，长度在编译期就确定，没有动态增长这回事。另外在 <code>std140</code> 这类显存布局规则下，<code>vec3</code> 也会按 16 字节对齐，所以用一个 <code>vec4</code> 顶替 <code>vec3</code> 通常并不浪费空间。</p>
+</blockquote>
+<p>　　一个向量的分量可以通过 <code>vec.x</code> 这种方式获取，这里 <code>x</code> 是指这个向量的第一个分量。分别使用 <code>.x</code>、<code>.y</code>、<code>.z</code> 和 <code>.w</code> 可以获取它们的第 1、2、3、4 个分量。GLSL 也允许对颜色使用 <code>rgba</code>，或是对纹理坐标使用 <code>stpq</code>，来访问相同的分量。</p>
+<blockquote>
+<p><strong>Tip</strong>：三套名字访问的是<strong>同一份</strong>数据，选哪一套不影响结果，只影响可读性。惯用法是按语义挑组：位置与方向用 <code>xyzw</code>，颜色用 <code>rgba</code>，纹理坐标用 <code>stpq</code>——在计算颜色的代码里写 <code>color.rgb</code> 比 <code>color.xyz</code> 更不容易让人误解。混着用虽然语法合法，但在团队代码里通常会被视为笔误的信号。</p>
+</blockquote>
+<p>　　向量这一数据类型也允许一些有趣而灵活的分量选择方式，叫做<strong>重组</strong>（Swizzling）。重组允许这样的语法：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> someVec;</span><br><span class="line"><span class="type">vec4</span> differentVec = someVec.xyxx;</span><br><span class="line"><span class="type">vec3</span> anotherVec = differentVec.zyw;</span><br><span class="line"><span class="type">vec4</span> otherVec = someVec.xxxx + anotherVec.yxzy;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：重组的结果本身仍是一个向量，长度就是写出的字母个数，因此它同样可以出现在赋值号左边，例如 <code>pos.xy = vec2(0.0, 1.0);</code> 只改写前两个分量；作为左值时分量不能重复（<code>pos.xx = ...</code> 非法），作为右值时则可以随意重复，所以 <code>someVec.xxxx</code> 这样的写法是构造 <code>vec4</code> 的常用手段。</p>
+</blockquote>
+<p>　　使用上面 4 个字母的任意组合，可以创建一个和原来向量一样长的（同类型）新向量，只要原来向量含有那些分量即可；然而，不允许在一个 <code>vec2</code> 向量中去获取 <code>.z</code> 元素。也可以把一个向量作为一个参数传给不同的向量构造函数，以减少需求参数的数量：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> vect = <span class="type">vec2</span>(<span class="number">0.5</span>, <span class="number">0.7</span>);</span><br><span class="line"><span class="type">vec4</span> result = <span class="type">vec4</span>(vect, <span class="number">0.0</span>, <span class="number">0.0</span>);</span><br><span class="line"><span class="type">vec4</span> otherResult = <span class="type">vec4</span>(result.xyz, <span class="number">1.0</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：把这几行示例与「一样长」对照着看，实际起决定作用的是<strong>写出的字母个数</strong>——<code>someVec.xyxx</code> 由 <code>vec2</code> 取出了 <code>vec4</code>，<code>result.xyz</code> 又把 <code>vec4</code> 缩成了 <code>vec3</code>，长度可增可减。真正不可逾越的只有一条：分量必须真实存在，<code>vec2</code> 上没有 <code>.z</code> 可取，<code>vec3</code> 上没有 <code>.w</code> 可取，这类错误在编译着色器时就会报出来。</p>
+</blockquote>
+<h2 id="1-4-3-输入与输出"><a href="#1-4-3-输入与输出" class="headerlink" title="1.4.3 输入与输出"></a>1.4.3 输入与输出</h2><p>　　虽然着色器是各自独立的小程序，但它们都是一个整体的一部分。出于这样的原因，每个着色器都需要有输入和输出，这样才能进行数据交流和传递。GLSL 定义了 <code>in</code> 和 <code>out</code> 两个关键字专门来实现这个目的：每个着色器使用这两个关键字设定输入和输出，只要一个输出变量与下一个着色器阶段的输入匹配，它就会传递下去。但在顶点和片段着色器中会有点不同。</p>
+<blockquote>
+<p><strong>Tip</strong>：这条「输出接输入」的链路是按变量名（或显式声明的 <code>layout (location = ...)</code>）配对的——顶点着色器的 <code>out</code> 与片段着色器的 <code>in</code> 必须同名同类型才会被接上，1.3 里提到的链接错误正来自这里。另外 <code>in</code> 的取值来源随阶段而异：顶点着色器的 <code>in</code> 由 CPU 端通过顶点属性提供，片段着色器的 <code>in</code> 则是光栅化对顶点输出做插值后的结果——同一个关键字，在两端拿到的数据来源并不一样。</p>
+</blockquote>
+<p>　　顶点着色器应该接收的是一种特殊形式的输入，否则就会效率低下：它的输入特殊在直接来自顶点数据。为了定义顶点数据该如何管理，使用 <code>location</code> 这一元数据指定输入变量，如此才能在 CPU 上配置顶点属性。</p>
+<blockquote>
+<p><strong>Tip</strong>：<code>location</code> 就是 1.3 中 <code>layout (location = 0)</code> 里那个 <code>0</code>——它把 GLSL 侧的 <code>in</code> 变量、<code>glVertexAttribPointer</code> 的第一个参数与 <code>glEnableVertexAttribArray</code> 的参数串成一条线。也可以省略 <code>layout</code>，让 OpenGL 自动分配位置，再用 <code>glGetAttribLocation</code> 反查；但位置一旦由驱动决定，就得靠查询结果去配置属性，多一层运行时依赖，因此显式写出 <code>location</code> 是更稳妥的做法。</p>
+</blockquote>
+<p>　　另一个例外是片段着色器，它需要一个 <code>vec4</code> 颜色输出变量，因为片段着色器需要生成一个最终输出的颜色。如果在片段着色器中没有定义输出颜色，OpenGL 会把物体渲染为黑色（或白色）。</p>
+<blockquote>
+<p><strong>Tip</strong>：这正是 1.3 中片段着色器必须写出 <code>out vec4 FragColor;</code> 的原因，本节只是把那条要求讲清楚。输出的位置默认为 0，也可以显式写成 <code>layout (location = 0) out vec4 FragColor;</code>；等到使用多渲染目标（MRT）时，输出会有多个，各自的位置便与 <code>glDrawBuffers</code> 指定的附件一一对应。本节的程序只有一个颜色附件，因此只声明一个输出即可。</p>
+</blockquote>
+<p>　　因此，若打算从一个着色器向另一个着色器发送数据，就必须在发送方着色器中声明一个输出，在接收方着色器中声明一个类似的输入。当类型和名字都一样的时候，OpenGL 就会把两个变量链接到一起，它们之间就能发送数据了——这是在链接程序对象时完成的。</p>
+<blockquote>
+<p><strong>Tip</strong>：类型要「一样」必须精确到分量数与类型本身，<code>vec3</code> 与 <code>vec4</code> 之间不会自动转换，这一点与前面「GLSL 不做隐式类型转换」的规则一致。另外要注意，着色器里声明了却没有真正被使用的变量，驱动的优化器可能直接把它删掉——此时用 <code>glGetAttribLocation</code>、<code>glGetUniformLocation</code> 去查会得到 <code>-1</code>，看上去像是「写错了名字」，实际只是该变量已被优化掉。</p>
+</blockquote>
+<h3 id="顶点着色器"><a href="#顶点着色器" class="headerlink" title="顶点着色器"></a>顶点着色器</h3><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos; <span class="comment">// 位置变量的属性位置值为0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 为片段着色器指定一个颜色输出</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>); <span class="comment">// 注意我们如何把一个vec3作为vec4的构造器的参数</span></span><br><span class="line">    vertexColor = <span class="type">vec4</span>(<span class="number">0.5</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>); <span class="comment">// 把输出变量设置为暗红色</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="片段着色器"><a href="#片段着色器" class="headerlink" title="片段着色器"></a>片段着色器</h3><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">in</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 从顶点着色器传来的输入变量（名称相同、类型相同）</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">    FragColor = vertexColor;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>　　从运行结果可以看到，顶点着色器中声明了一个 <code>vertexColor</code> 变量作为 <code>vec4</code> 输出，片段着色器中声明了一个类似的 <code>vertexColor</code>。由于它们名字相同且类型相同，片段着色器中的 <code>vertexColor</code> 就和顶点着色器中的 <code>vertexColor</code> 链接了。</p>
+<p><img src="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/dark-red-triangle.png" alt="窗口中绘制的暗红色三角形" loading='lazy'></p>
+<p><em>图 1.4-1：通过 <code>vertexColor</code> 传递颜色后的运行结果</em></p>
+<blockquote>
+<p><strong>Tip</strong>：本例三个顶点写入的颜色相同，光栅化插值之后整片三角形仍是同一种暗红色，看不出插值的痕迹；把三个顶点的颜色分别设成不同值，才会出现 1.3 中提到的渐变。另外要留意 <code>gl_Position = vec4(aPos, 1.0)</code> 这种「用向量拼向量」的构造写法，它比逐个写 <code>aPos.x, aPos.y, aPos.z</code> 更常见，<code>w</code> 分量依然固定填 <code>1.0</code>。</p>
+</blockquote>
+<h2 id="1-4-4-Uniform"><a href="#1-4-4-Uniform" class="headerlink" title="1.4.4 Uniform"></a>1.4.4 Uniform</h2><p>　　<code>uniform</code> 是另一种在 CPU 上的应用程序向 GPU 上的着色器传递数据的方式，但它和顶点属性有些不同。首先，<code>uniform</code> 是<strong>全局的</strong>（Global）——全局意味着 <code>uniform</code> 变量必须在每个着色器程序对象中都是独一无二的，而且它可以被该着色器程序的任意着色器在任意阶段访问。其次，无论把 <code>uniform</code> 值设置成什么，<code>uniform</code> 都会一直保存它们的数据，直到它们被重置或更新。</p>
+<blockquote>
+<p><strong>Tip</strong>：这里的「唯一」是指在同一程序对象内部：顶点着色器与片段着色器可以各声明一个同名的 <code>uniform</code>，链接后它们其实是同一个变量，值也只有一份；不同的程序对象之间则互不影响，各自保存自己的副本。正因为这份数据属于<strong>程序对象</strong>而非某个着色器对象，<code>glUniform*</code> 系列函数只会作用于当前 <code>glUseProgram</code> 激活的那个程序——在 <code>glUseProgram</code> 之前设置 uniform 不会报错，但设置结果会落到别的程序（或什么都不落）上，是初学时很常见的一个坑。</p>
+</blockquote>
+<p>　　要在 GLSL 中声明 <code>uniform</code>，只需在着色器中使用 <code>uniform</code> 关键字，并带上类型和名称。</p>
+<p>　　如果声明了一个 <code>uniform</code> 却在 GLSL 代码中没有用过它，编译器会静默地移除这个变量，导致最后编译出的版本中并不会包含它，这可能引出几个非常麻烦的错误，这一点需要记住。</p>
+<blockquote>
+<p><strong>Tip</strong>：这类移除发生在链接阶段，而且不会有任何警告，因此「声明了却查不到位置」往往不是名字拼写的问题，而是该变量真的已经被优化掉：<code>glGetUniformLocation</code> 会返回 <code>-1</code>，随后所有针对它的 <code>glUniform*</code> 调用都会被忽略（<code>-1</code> 不是合法的位置值）。调试时若临时注释掉了使用某个 <code>uniform</code> 的代码，就要预期它随之消失，不要对着 <code>-1</code> 反复检查拼写。</p>
+</blockquote>
+<p>　　下面看看能否通过 <code>uniform</code> 设置三角形的颜色：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec4</span> ourColor; <span class="comment">// 在OpenGL程序代码中设定这个变量</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">    FragColor = ourColor;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>　　这里在片段着色器中声明了一个 <code>uniform vec4</code> 的 <code>ourColor</code>，并把片段着色器的输出颜色设置为该 <code>uniform</code> 值的内容。</p>
+<blockquote>
+<p><strong>Tip</strong>：<code>uniform</code> 是程序级的全局变量，声明在哪个阶段只取决于哪个阶段要用它——上面把它放在片段着色器，是因为只有片段着色器读取它。若某个 <code>uniform</code> 需要跨越阶段使用，只要在需要它的每个阶段各声明一份同名同类型的即可，链接后仍是同一个变量；但只在顶点着色器里声明、却想在片段着色器里使用是行不通的，那里根本看不到这个名字。</p>
+</blockquote>
+<p>　　这个 <code>uniform</code> 现在还是空的，还没有给它添加任何数据，下面就来做这件事。首先需要找到着色器中 <code>uniform</code> 属性的索引／位置值，得到位置值之后就可以更新它的值了。这次不去给像素传递单独一个颜色，而是让它随着时间改变颜色：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> timeValue = <span class="built_in">glfwGetTime</span>();</span><br><span class="line"><span class="type">float</span> greenValue = (<span class="built_in">sin</span>(timeValue) / <span class="number">2.0f</span>) + <span class="number">0.5f</span>;</span><br><span class="line"><span class="type">int</span> vertexColorLocation = <span class="built_in">glGetUniformLocation</span>(shaderProgram, <span class="string">"ourColor"</span>);</span><br><span class="line"><span class="built_in">glUseProgram</span>(shaderProgram);</span><br><span class="line"><span class="built_in">glUniform4f</span>(vertexColorLocation, <span class="number">0.0f</span>, greenValue, <span class="number">0.0f</span>, <span class="number">1.0f</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　<code>glGetUniformLocation</code> 用于查询 <code>uniform ourColor</code> 的位置值：查询函数需要提供着色器程序与 <code>uniform</code> 的名字，二者共同指明位置值的来源。如果 <code>glGetUniformLocation</code> 返回 <code>-1</code>，就代表没有找到这个位置值。需要注意，查询 <code>uniform</code> 地址并不要求在查询之前使用过该着色器程序，但更新一个 <code>uniform</code> 之前必须先使用程序（调用 <code>glUseProgram</code>），因为它是在当前激活的着色器程序中设置 <code>uniform</code> 的。</p>
+<p>　　因为 OpenGL 在其核心是一个 C 库，所以它不支持类型重载，在函数参数不同的时候就要为其定义新的函数，<code>glUniform</code> 是一个典型例子。这个函数有一个特定的后缀，标识设定的 <code>uniform</code> 的类型。可能的后缀有：</p>
+<table>
+<thead>
+<tr>
+<th>后缀</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>f</code></td>
+<td>函数需要一个 <code>float</code> 作为它的值</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>函数需要一个 <code>int</code> 作为它的值</td>
+</tr>
+<tr>
+<td><code>ui</code></td>
+<td>函数需要一个 <code>unsigned int</code> 作为它的值</td>
+</tr>
+<tr>
+<td><code>3f</code></td>
+<td>函数需要 3 个 <code>float</code> 作为它的值</td>
+</tr>
+<tr>
+<td><code>fv</code></td>
+<td>函数需要一个 <code>float</code> 向量／数组作为它的值</td>
+</tr>
+</tbody></table>
+<p>　　每当打算配置一个 OpenGL 的选项时，就可以简单地根据这些规则选择适合自己数据类型的重载函数。在本例中要设置 <code>uniform</code> 的 4 个 <code>float</code> 值，因此通过 <code>glUniform4f</code> 传递数据（也可以使用 <code>fv</code> 版本）。</p>
+<blockquote>
+<p><strong>Tip</strong>：位置值只是某个程序对象内部的索引，并不是显存的真实地址。它只在程序对象保持链接结果期间有效——一旦重新链接（或重新创建）程序，旧的位置值就作废了，所以把位置值缓存到程序重载之后使用是另一个容易被忽略的坑。</p>
+</blockquote>
+<h2 id="1-4-5-更多属性"><a href="#1-4-5-更多属性" class="headerlink" title="1.4.5 更多属性"></a>1.4.5 更多属性</h2><p>　　在前面的教程中，已经了解了如何填充 VBO、配置顶点属性指针，以及如何把它们都储存到一个 VAO 里。这次同样打算把颜色数据加进顶点数据中：颜色数据会作为 3 个 <code>float</code> 值添加到 <code>vertices</code> 数组中，三角形的三个角分别被指定为红色、绿色和蓝色：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = {</span><br><span class="line">    <span class="comment">// 位置              // 颜色</span></span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右下</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 左下</span></span><br><span class="line">     <span class="number">0.0f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>    <span class="comment">// 顶部</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：位置与颜色像这样交错放在同一个数组里，叫做<strong>交错布局</strong>（Interleaved），也是本教程一贯采用的写法：同一个顶点的各项属性在内存里相邻，GPU 按顶点读取时局部性更好。另一种做法是把位置与颜色各放进一个独立的 VBO（分离布局），配置上更直观，代价是每次绘制要多绑定一个缓冲，VAO 里也要多记一份关联关系。</p>
+</blockquote>
+<p>　　由于现在有更多的数据要发送到顶点着色器，有必要调整一下顶点着色器，使它能够接收颜色值作为一个顶点属性输入。需要注意，这里用 <code>layout</code> 标识符把 <code>aColor</code> 属性的位置值设置为 1：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos;   <span class="comment">// 位置变量的属性位置值为 0 </span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec3</span> aColor; <span class="comment">// 颜色变量的属性位置值为 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec3</span> ourColor; <span class="comment">// 向片段着色器输出一个颜色</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    ourColor = aColor; <span class="comment">// 将ourColor设置为我们从顶点数据那里得到的输入颜色</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：顶点着色器里写下的两个 <code>layout (location = ...)</code>，正是 1.4.3 中提到的「用 <code>location</code> 指定输入变量」的实例——GPU 侧靠着这两个位置值，与 CPU 侧 <code>glVertexAttribPointer</code> 的第一个参数一一对上。位置值本身没有特殊含义，只要两边的编号一致即可，<code>0</code> 给位置、<code>1</code> 给颜色只是本教程的约定，并不影响正确性。</p>
+</blockquote>
+<p>　　由于不再使用 <code>uniform</code> 来传递片段的颜色，现在改用 <code>ourColor</code> 输出变量，必须再修改一下片段着色器：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;  </span><br><span class="line"><span class="keyword">in</span> <span class="type">vec3</span> ourColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">{</span><br><span class="line">    FragColor = <span class="type">vec4</span>(ourColor, <span class="number">1.0</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：这里的 <code>in vec3 ourColor</code> 必须与顶点着色器的 <code>out vec3 ourColor</code> 类型完全一致——正因为这样，上一节示例里那个 <code>out vec4 vertexColor</code> 必须一并从 <code>vec4</code> 改成 <code>vec3</code>，否则链接阶段就会报输入输出不匹配。<code>vec4(ourColor, 1.0)</code> 沿用「用向量拼向量」的构造方式补上 <code>alpha</code> 分量；如果希望颜色带有透明度，这个 <code>1.0</code> 就是需要改动的那个位置。</p>
+</blockquote>
+<p>　　因为添加了另一个顶点属性，并且更新了 VBO 的内存，所以必须重新配置顶点属性指针。更新后的 VBO 内存中的数据现在看起来像这样：</p>
+<p><img src="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/interleaved-vertex-attributes.png" alt="交错布局下位置与颜色属性的步长与偏移" loading='lazy'></p>
+<p><em>图 1.4-2：更新后的 VBO 内存布局</em></p>
+<p>　　图中每个顶点由 <code>X Y Z R G B</code> 六个分量组成：<code>X</code>、<code>Y</code>、<code>Z</code> 是位置，<code>R</code>、<code>G</code>、<code>B</code> 是颜色，三者与三个顶点在数组里交替出现，因此位置属性的 <code>STRIDE</code> 为 24 字节、<code>OFFSET</code> 为 0，颜色属性的 <code>STRIDE</code> 同为 24 字节、<code>OFFSET</code> 为 12。</p>
+<blockquote>
+<p><strong>Tip</strong>：图上的刻度是<strong>字节</strong>而不是浮点个数——<code>glVertexAttribPointer</code> 的步长与偏移两个参数都以字节为单位，所以此处要写 <code>6 * sizeof(float)</code> 与 <code>3 * sizeof(float)</code>，而不是 <code>6</code> 和 <code>3</code>。这也正是 1.3 中把步长写成 <code>3 * sizeof(float)</code> 的由来，属性变多之后只是这个式子变长，规则并没有变。</p>
+</blockquote>
+<p>　　知道了现在使用的布局，就可以使用 <code>glVertexAttribPointer</code> 函数更新顶点格式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 位置属性</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)<span class="number">0</span>);</span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 颜色属性</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(<span class="number">1</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)(<span class="number">3</span>* <span class="built_in">sizeof</span>(<span class="type">float</span>)));</span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　<code>glVertexAttribPointer</code> 函数的前几个参数比较明了：这次配置的是属性位置值为 1 的顶点属性，颜色值有 3 个 <code>float</code> 那么大，并且不打算标准化这些值。</p>
+<p>　　由于现在有了两个顶点属性，就不得不重新计算步长值。为获得数据队列中下一个属性值（比如位置向量的下个 <code>x</code> 分量），必须向右移动 6 个 <code>float</code>，其中 3 个是位置值，另外 3 个是颜色值。这使步长值为 6 乘以 <code>float</code> 的字节数（= 24 字节）。同样，这次必须指定一个偏移量：对于每个顶点来说，位置顶点属性在前，所以它的偏移量是 0；颜色属性紧随位置数据之后，所以偏移量就是 <code>3 * sizeof(float)</code>，用字节来计算就是 12 字节。</p>
+<blockquote>
+<p><strong>Tip</strong>：最后一个参数虽然写着 <code>void*</code>，实际接收的是<strong>字节偏移量</strong>，所以颜色的偏移要做一次整数到指针的强制转换；当结构体字段变多时，用 <code>offsetof(Vertex, color)</code> 代替手写的 <code>3 * sizeof(float)</code> 更不容易算错（需要 <code>#include &lt;cstddef&gt;</code>）。另外别漏掉每个属性后面的 <code>glEnableVertexAttribArray</code>——顶点属性默认禁用，只配置指针而不启用，GPU 依旧读不到这个属性。</p>
+</blockquote>
+<p>　　运行程序后，应该会看到如下结果：</p>
+<p><img src="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/gradient-triangle.png" alt="三个顶点分别为红、绿、蓝时插值得到的彩色三角形" loading='lazy'></p>
+<p><em>图 1.4-3：三个顶点着色为红、绿、蓝之后的运行结果</em></p>
+<p>　　这张图可能不是预期中的样子，因为只提供了 3 个颜色，而不是画面里呈现的这种大调色板。这是片段着色器中所谓的<strong>片段插值</strong>（Fragment Interpolation）的结果：渲染一个三角形时，光栅化（Rasterization）阶段通常会产生比原先指定的顶点更多的片段，光栅会根据每个片段在三角形形状上所处的相对位置决定这些片段的位置。</p>
+<p>　　基于这些位置，它会插值（Interpolate）所有片段着色器的输入变量。</p>
+<h2 id="1-4-6-我们自己的着色器类"><a href="#1-4-6-我们自己的着色器类" class="headerlink" title="1.4.6 我们自己的着色器类"></a>1.4.6 我们自己的着色器类</h2><p>　　编写、编译、管理着色器是件麻烦事。在着色器主题的最后，会写一个类来让这件事轻松一点：它可以从硬盘读取着色器，然后编译并链接它们，并对它们进行错误检测，于是用起来就方便了。使用这个着色器类很简单——只要创建一个着色器对象，从那一点开始就可以直接使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Shader <span class="title">ourShader</span><span class="params">(<span class="string">"path/to/shaders/shader.vs"</span>, <span class="string">"path/to/shaders/shader.fs"</span>)</span></span>;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">while</span>(...)</span><br><span class="line">{</span><br><span class="line">    ourShader.<span class="built_in">use</span>();</span><br><span class="line">    ourShader.<span class="built_in">setFloat</span>(<span class="string">"someUniform"</span>, <span class="number">1.0f</span>);</span><br><span class="line">    <span class="built_in">DrawStuff</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：把着色器源码从 C 字符串搬到独立文件之后，改着色器就无需重新编译 C++ 程序，只要重启应用即可看到效果，这也是后续调试光照、纹理时最省时间的做法。代价是要自己处理文件读取：路径相对的是<strong>程序运行时的当前工作目录</strong>，而不是源码目录，用 IDE 启动时输出目录常常与预期不同，于是出现「文件明明在，却打不开」的情况——遇到读取失败，先确认工作目录，再看路径。</p>
+</blockquote>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>　　本节从着色器本身讲起，依次补齐了它的书写语言、数据类型、阶段之间的输入输出、由 CPU 传入的 <code>uniform</code> 与顶点属性，最后把整套编译链接流程封装成一个类。</p>
+<ul>
+<li><strong>着色器与 GLSL</strong>：着色器是运行在 GPU 上、为渲染管线某一阶段服务的小程序，本质上是把输入转化为输出的程序，彼此之间只能靠输入输出通信；它用类 C 的 GLSL 编写，天然带有向量与矩阵运算特性。顶点着色器中每个输入变量也叫顶点属性，其数量上限由硬件决定，可用 <code>GL_MAX_VERTEX_ATTRIBS</code> 查询（至少 16 个 4 分量属性）。</li>
+<li><strong>数据类型</strong>：基础类型为 <code>int</code>、<code>float</code>、<code>double</code>、<code>uint</code>、<code>bool</code>，容器类型是向量与矩阵。向量按「前缀表类型、后缀表分量数」命名（<code>vecn</code>、<code>bvecn</code>、<code>ivecn</code>、<code>uvecn</code>、<code>dvecn</code>），分量可用 <code>xyzw</code>、<code>rgba</code>、<code>stpq</code> 三套名字访问，并通过重组（Swizzling）任意挑选、重复分量来构造新向量。</li>
+<li><strong>输入与输出</strong>：<code>in</code> 与 <code>out</code> 负责阶段之间的传值，输出与下一阶段的输入必须类型与名字都一致，链接程序对象时才会被接上；顶点着色器的输入来自顶点数据、用 <code>location</code> 指定位置值，片段着色器则必须声明一个 <code>vec4</code> 颜色输出。</li>
+<li><strong>uniform</strong>：由 CPU 侧设置，在程序对象内全局唯一，并且会一直保存数据直到被更新；<code>glGetUniformLocation</code> 负责查询位置值（返回 <code>-1</code> 表示没有找到），设置前必须先调用 <code>glUseProgram</code>，函数后缀标识参数类型，如 <code>glUniform4f</code> 对应 4 个 <code>float</code>。声明了却未使用的 <code>uniform</code> 会被编译器静默移除——本节例子用 <code>sin(glfwGetTime())</code> 让它随时间改变颜色。</li>
+<li><strong>更多属性</strong>：顶点数据追加 3 个 <code>float</code> 颜色分量后，位置与颜色要分别调用 <code>glVertexAttribPointer</code>；交错布局下两者的步长都是 6 个 <code>float</code>（24 字节），颜色属性的偏移为 <code>3 * sizeof(float)</code>（12 字节）。画面中的连续渐变来自光栅化的<strong>片段插值</strong>——它按片段在三角形中的相对位置，对所有片段着色器的输入变量做插值。</li>
+<li><strong>着色器类</strong>：为免去反复编写、编译与错误检查的麻烦，本节末尾封装出一个 <code>Shader</code> 类，它从硬盘读取着色器源码并完成编译、链接与错误检测，使用时只需构造对象，再调用 <code>use()</code> 与 <code>setFloat()</code> 等接口。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/">https://pomelover.github.io/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LearnOpenGL/">LearnOpenGL</a><a class="post-meta__tags" href="/tags/OpenGL/">OpenGL</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post-share"><div class="social-share" data-image="/images/jinx.webp" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">1.3 你好，三角形</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-20</div><div class="info-item-2">1.3 你好，三角形</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.2-HelloWindow/" title="1.2 你好，窗口"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-16</div><div class="info-item-2">1.2 你好，窗口</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/" title="1.1 OpenGL"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-16</div><div class="info-item-2">1.1 OpenGL</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-4-%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">1.4 着色器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-1-GLSL"><span class="toc-number">1.1.</span> <span class="toc-text">1.4.1 GLSL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-2-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">1.4.2 数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E9%87%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">向量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-3-%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA"><span class="toc-number">1.3.</span> <span class="toc-text">1.4.3 输入与输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">顶点着色器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">片段着色器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-4-Uniform"><span class="toc-number">1.4.</span> <span class="toc-text">1.4.4 Uniform</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-5-%E6%9B%B4%E5%A4%9A%E5%B1%9E%E6%80%A7"><span class="toc-number">1.5.</span> <span class="toc-text">1.4.5 更多属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-6-%E6%88%91%E4%BB%AC%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9D%80%E8%89%B2%E5%99%A8%E7%B1%BB"><span class="toc-number">1.6.</span> <span class="toc-text">1.4.6 我们自己的着色器类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/" title="1.4 着色器">1.4 着色器</a><time datetime="2026-09-20T13:27:09.000Z" title="发表于 2026-09-20 21:27:09">2026-09-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形">1.3 你好，三角形</a><time datetime="2026-09-19T17:01:56.000Z" title="发表于 2026-09-20 01:01:56">2026-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/19/MythicalManMonth/MythicalManMonth-03/" title="（三）外科手术队伍"><img src="/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（三）外科手术队伍"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/19/MythicalManMonth/MythicalManMonth-03/" title="（三）外科手术队伍">（三）外科手术队伍</a><time datetime="2026-09-18T16:00:00.000Z" title="发表于 2026-09-19 00:00:00">2026-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.2-HelloWindow/" title="1.2 你好，窗口">1.2 你好，窗口</a><time datetime="2026-09-16T15:31:16.000Z" title="发表于 2026-09-16 23:31:16">2026-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/" title="1.1 OpenGL">1.1 OpenGL</a><time datetime="2026-09-16T14:46:56.000Z" title="发表于 2026-09-16 22:46:56">2026-09-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="https://registry.npmmirror.com/instant.page/5.2.0/files/instantpage.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
