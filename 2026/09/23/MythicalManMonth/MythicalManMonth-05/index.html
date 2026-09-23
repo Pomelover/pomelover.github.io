@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>（五）画蛇添足 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第 5 章 画蛇添足 读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。   　　本章由一个设问引出：若将功能规格说明的制订责任，从开发快速、成本低廉产品的责任中分离出去，又该依靠什么样的准则和机制来约束结构师的创造性热情？  如果将制订功能规格说明的责任从开发快速、成本低廉的产品的责任中分离出来，那么有什么样的准则和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（五）画蛇添足">
+<meta property="og:url" content="https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="第 5 章 画蛇添足 读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。   　　本章由一个设问引出：若将功能规格说明的制订责任，从开发快速、成本低廉产品的责任中分离出去，又该依靠什么样的准则和机制来约束结构师的创造性热情？  如果将制订功能规格说明的责任从开发快速、成本低廉的产品的责任中分离出来，那么有什么样的准则和">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/manmonth.webp">
+<meta property="article:published_time" content="2026-09-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:39:33.811Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="人月神话">
+<meta property="article:tag" content="软件工程">
+<meta property="article:tag" content="系统设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/manmonth.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "（五）画蛇添足",
+  "url": "https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/",
+  "image": "https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/manmonth.webp",
+  "datePublished": "2026-09-22T16:00:00.000Z",
+  "dateModified": "2026-09-23T13:39:33.811Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/7.1.0/files/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '（五）画蛇添足',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div id="web_bg" style="background-image: url(/images/pages/background.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">60</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">（五）画蛇添足</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">（五）画蛇添足</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-22T16:00:00.000Z" title="发表于 2026-09-23 00:00:00">2026-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-23T13:39:33.811Z" title="更新于 2026-09-23 21:39:33">2026-09-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%BA%E6%9C%88%E7%A5%9E%E8%AF%9D/">人月神话</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="第-5-章-画蛇添足"><a href="#第-5-章-画蛇添足" class="headerlink" title="第 5 章 画蛇添足"></a>第 5 章 画蛇添足</h1><blockquote>
+<p>读书笔记系列，书籍：Frederick P. Brooks, Jr.《人月神话》（The Mythical Man-Month）。</p>
+</blockquote>
+<hr>
+<p>　　本章由一个设问引出：若将<strong>功能规格说明</strong>的制订责任，从开发<strong>快速、成本低廉</strong>产品的责任中分离出去，又该依靠什么样的<strong>准则和机制</strong>来约束结构师的<strong>创造性热情</strong>？</p>
+<blockquote>
+<p>如果将制订功能规格说明的责任从开发快速、成本低廉的产品的责任中分离出来，那么有什么样的准则和机制来约束结构师的创造性热情呢？</p>
+</blockquote>
+<p>　　对此，基本的回答是<strong>结构师</strong>与<strong>建筑人员</strong>之间彻底、仔细、和谐的交流。除此之外，还有一些更细致的答案同样值得关注。</p>
+<blockquote>
+<p><strong>Tip</strong>：把「交流」作为第一答案，等于承认约束创造热情的不是流程条文或审批卡点，而是设计意图能否被实现方真正理解；那些更细致的答案，可以看作这条主线在不同环节上的具体化。</p>
+</blockquote>
+<hr>
+<h1 id="5-1-结构师的交互准则和机制"><a href="#5-1-结构师的交互准则和机制" class="headerlink" title="5.1 结构师的交互准则和机制"></a>5.1 结构师的交互准则和机制</h1><p>　　建筑行业的结构设计师用<strong>估算技术</strong>编制预算，再由承包商的报价来验证和修正。报价总会超过预算，设计师于是改进预算或修订设计、调整到下一期工程，也可能向承包商建议更省钱的实现方式。</p>
+<p>　　计算机系统的结构师受同样的过程支配，处境却不同：他能在设计早期随时得到报价，这是优势；而常常只有一个承包商，其估计可被抬高或压低，以反映对设计的好恶，这是劣势。因此，<strong>尽早交流和持续沟通</strong>能给结构师带来成本意识、给开发人员带来自信，并且不混淆各自的责任分工。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>建筑行业</th>
+<th>计算机系统的结构师</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>成本反馈来源</td>
+<td>承包商的报价</td>
+<td>向承包商（实现方）询问所得的估算</td>
+</tr>
+<tr>
+<td>获取时机</td>
+<td>报价在设计之后，用于验证和修正预算</td>
+<td>设计早期即可获得，几乎只要询问就有答案</td>
+</tr>
+<tr>
+<td>反馈的可信度</td>
+<td>报价总会超过预算，需要反复迭代</td>
+<td>常常只有一个承包商，报价可被抬高或压低，以反映其对设计的好恶</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Tip</strong>：这段类比的落点不在「建筑」与「软件」的差异，而在<strong>成本反馈通道的质量</strong>。软件结构师能廉价、快速地在设计早期反复询价，这是优势；但唯一的承包商既是估算者又是实现者，估算里会掺入他对设计的好恶。因此「尽早交流、持续沟通」是让这条通道保持可信的手段：成本意识归结构师，设计信心归开发人员，而责任分工不被沟通本身搅乱。</p>
+</blockquote>
+<hr>
+<p>　　面对估算过高的难题，结构师有两个选择：<strong>削减设计</strong>，或者建议<strong>成本更低的实现方法</strong>——挑战估算的结果。后者是一种固有的<strong>主观感性反应</strong>，本质上是在挑战开发人员的做事方式。想要成功，结构师必须：</p>
+<ol>
+<li>牢记是开发人员承担<strong>创造性和发明性的实现责任</strong>，所以结构师只能建议，而不能支配；</li>
+<li>时刻准备着为所指定的说明建议一种实现的方法，同样准备接受其他任何能达到目标的方法；</li>
+<li>对上述的建议保持低调和平静；</li>
+<li>准备放弃坚持所作的改进建议。</li>
+</ol>
+<blockquote>
+<p><strong>Tip</strong>：第 4 条的英文原文是 <em>be ready to forego credit for suggested improvements</em>，字面更接近「准备放弃这些改进建议带来的功劳」。中文版译作「放弃坚持所作的改进建议」，读起来是指别再坚持自己的方案；两种读法都指向同一个姿态——建议一旦被否定就不强推。</p>
+</blockquote>
+<hr>
+<h1 id="5-2-自律——开发第二个系统所带来的后果"><a href="#5-2-自律——开发第二个系统所带来的后果" class="headerlink" title="5.2 自律——开发第二个系统所带来的后果"></a>5.2 自律——开发第二个系统所带来的后果</h1><p>　　在开发第一个系统时，结构师倾向于<strong>精炼和简洁</strong>：他知道自己对正在进行的任务不够了解，所以会谨慎仔细地工作。而<strong>第二个系统是设计师们所设计的最危险的系统</strong>——一种普遍倾向是<strong>过分地设计</strong>它，把曾在第一个系统中被小心谨慎地<strong>推迟</strong>了的修饰功能和想法大量添加进去。</p>
+<blockquote>
+<p><strong>Tip</strong>：危险恰恰来自反差——第一个系统让结构师对这类系统建立起十足信心并掌握了相应知识，而当初被推迟的想法此时正好排队等着落地，于是「精炼简洁」的约束最先失守。</p>
+</blockquote>
+<hr>
+<p>　　那么，如何避免画蛇添足（second-system effect）？答案是分层的：</p>
+<ul>
+<li><strong>结构师</strong>：他无法跳过第二个系统，但可以有意识地关注这类系统的<strong>特殊危险</strong>，运用特别的<strong>自我约束准则</strong>来避免功能上的修饰，并根据系统基本理念及目的的变更，<strong>舍弃</strong>一些功能。</li>
+<li><strong>度量准则</strong>：一个可以开阔结构师眼界的准则是<strong>为每个小功能分配一个值</strong>——功能 x 不超过 <code>m</code> 字节的内存和 <code>n</code> 微秒（每次调用）。这些值在一开始作为决策的向导，在物理实现期间则充当指南和对所有人的警示。</li>
+<li><strong>项目经理</strong>：必须坚持<strong>至少拥有两个以上系统开发经验</strong>的结构师所作的决定；同时保持对特殊诱惑的警觉，不断提出正确的问题，确保<strong>原则上的概念和目标</strong>在详细设计中得到完整的体现。</li>
+</ul>
+<blockquote>
+<p><strong>Tip</strong>：三条答案分别落在<strong>人</strong>（有经验的结构师）、<strong>流程</strong>（项目经理不断提问）和<strong>可度量的约束</strong>（每个功能的字节数与微秒数预算）上。其中第三条最值得留意：它把「不要画蛇添足」从一句主观告诫变成了可核查的数字。</p>
+</blockquote>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>　　本章回答的是「谁、用什么机制来约束结构师的创造性热情」：基本答案是结构师与建筑人员之间彻底、仔细、和谐的交流，更细致的答案则落在成本反馈、交互准则与自我约束上。</p>
+<ul>
+<li>5.1 借建筑业的成本反馈回路说明：估算是会被报价验证和修正的，报价超过预算就改进预算、修订设计或建议更省钱的实现。软件结构师的优势是设计早期几乎随时能拿到报价，劣势是常常只有一个承包商、其估算会随对设计的好恶而浮动，因此必须<strong>尽早交流和持续沟通</strong>——既保证成本意识，又不动摇各自的责任分工。</li>
+<li>面对过高的估算，结构师只有<strong>削减设计</strong>或<strong>挑战估算</strong>两条路；后者是主观感性反应，成功的前提是四条准则：只建议不支配、随时能给出一种实现方案、低调平静地提出、放弃坚持自己的改进建议。</li>
+<li>5.2 的第二系统效应指出：第一个系统因自知了解不足而精炼简洁，<strong>第二个系统才是最危险的</strong>，普遍倾向是把第一个系统里被推迟的修饰功能和想法一次性加进去。</li>
+<li>应对办法是事前的三层防线——结构师警觉这类系统的特殊危险、额外自我约束并随基本理念与目的的变更<strong>舍弃功能</strong>；用「功能 x 不超过 <code>m</code> 字节内存和 <code>n</code> 微秒」把每个功能的代价<strong>量化</strong>为决策向导与实现期警示；项目经理则坚持由<strong>至少有两个以上系统经验</strong>的结构师拍板，并用正确的问题确保概念和目标完整落到详细设计里。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/">https://pomelover.github.io/2026/09/23/MythicalManMonth/MythicalManMonth-05/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%BA%E6%9C%88%E7%A5%9E%E8%AF%9D/">人月神话</a><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a><a class="post-meta__tags" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></div><div class="post-share"><div class="social-share" data-image="/2026/09/23/MythicalManMonth/MythicalManMonth-05/manmonth.webp" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2026/09/21/LearnOpenGL/LearnOpenGL-1.5-Textures/" title="1.5 纹理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">1.5 纹理</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2026/09/20/MythicalManMonth/MythicalManMonth-04/" title="（四）贵族专制、民主政治和系统设计"><img class="cover" src="/2026/09/20/MythicalManMonth/MythicalManMonth-04/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-20</div><div class="info-item-2">（四）贵族专制、民主政治和系统设计</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/19/MythicalManMonth/MythicalManMonth-03/" title="（三）外科手术队伍"><img class="cover" src="/2026/09/19/MythicalManMonth/MythicalManMonth-03/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-19</div><div class="info-item-2">（三）外科手术队伍</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/15/MythicalManMonth/MythicalManMonth-01/" title="（一）焦油坑"><img class="cover" src="/2026/09/15/MythicalManMonth/MythicalManMonth-01/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">（一）焦油坑</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/15/MythicalManMonth/MythicalManMonth-02/" title="（二）人月神话"><img class="cover" src="/2026/09/15/MythicalManMonth/MythicalManMonth-02/manmonth.webp" alt="cover" loading='lazy'><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">（二）人月神话</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">60</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-5-%E7%AB%A0-%E7%94%BB%E8%9B%87%E6%B7%BB%E8%B6%B3"><span class="toc-number">1.</span> <span class="toc-text">第 5 章 画蛇添足</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-1-%E7%BB%93%E6%9E%84%E5%B8%88%E7%9A%84%E4%BA%A4%E4%BA%92%E5%87%86%E5%88%99%E5%92%8C%E6%9C%BA%E5%88%B6"><span class="toc-number">2.</span> <span class="toc-text">5.1 结构师的交互准则和机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-2-%E8%87%AA%E5%BE%8B%E2%80%94%E2%80%94%E5%BC%80%E5%8F%91%E7%AC%AC%E4%BA%8C%E4%B8%AA%E7%B3%BB%E7%BB%9F%E6%89%80%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%90%8E%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">5.2 自律——开发第二个系统所带来的后果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/23/MythicalManMonth/MythicalManMonth-05/" title="（五）画蛇添足"><img src="/2026/09/23/MythicalManMonth/MythicalManMonth-05/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（五）画蛇添足"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/23/MythicalManMonth/MythicalManMonth-05/" title="（五）画蛇添足">（五）画蛇添足</a><time datetime="2026-09-22T16:00:00.000Z" title="发表于 2026-09-23 00:00:00">2026-09-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/21/LearnOpenGL/LearnOpenGL-1.5-Textures/" title="1.5 纹理">1.5 纹理</a><time datetime="2026-09-21T12:00:54.000Z" title="发表于 2026-09-21 20:00:54">2026-09-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/" title="1.4 着色器">1.4 着色器</a><time datetime="2026-09-20T13:27:09.000Z" title="发表于 2026-09-20 21:27:09">2026-09-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形">1.3 你好，三角形</a><time datetime="2026-09-19T17:01:56.000Z" title="发表于 2026-09-20 01:01:56">2026-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/20/MythicalManMonth/MythicalManMonth-04/" title="（四）贵族专制、民主政治和系统设计"><img src="/2026/09/20/MythicalManMonth/MythicalManMonth-04/manmonth.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（四）贵族专制、民主政治和系统设计"/ loading='lazy'></a><div class="content"><a class="title" href="/2026/09/20/MythicalManMonth/MythicalManMonth-04/" title="（四）贵族专制、民主政治和系统设计">（四）贵族专制、民主政治和系统设计</a><time datetime="2026-09-19T16:00:00.000Z" title="发表于 2026-09-20 00:00:00">2026-09-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="https://registry.npmmirror.com/instant.page/5.2.0/files/instantpage.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
