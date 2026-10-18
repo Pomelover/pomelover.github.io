@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2.1 颜色 | Pomeloverの自习室</title><meta name="author" content="Pomelover"><meta name="copyright" content="Pomelover"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="2.1 颜色 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　现实世界中存在无数种颜色，每个物体都有自己的颜色。要模拟真实世界中的（无限的）颜色，只能借助（有限的）数值来表示，因此并非所有现实世界中的颜色都能用数值表达出来。不过数值仍能表现出非常多的颜色，多到几乎不会注意到与现实颜色之间有任何差异。颜色">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2.1 颜色">
+<meta property="og:url" content="https://pomelover.github.io/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/index.html">
+<meta property="og:site_name" content="Pomeloverの自习室">
+<meta property="og:description" content="2.1 颜色 学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 learnopengl-cn.github.io。  　　现实世界中存在无数种颜色，每个物体都有自己的颜色。要模拟真实世界中的（无限的）颜色，只能借助（有限的）数值来表示，因此并非所有现实世界中的颜色都能用数值表达出来。不过数值仍能表现出非常多的颜色，多到几乎不会注意到与现实颜色之间有任何差异。颜色">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pomelover.github.io/images/jinx.webp">
+<meta property="article:published_time" content="2026-10-18T10:05:37.000Z">
+<meta property="article:modified_time" content="2026-10-18T10:29:07.114Z">
+<meta property="article:author" content="Pomelover">
+<meta property="article:tag" content="LearnOpenGL">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="图形学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pomelover.github.io/images/jinx.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "2.1 颜色",
+  "url": "https://pomelover.github.io/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/",
+  "image": "https://pomelover.github.io/images/jinx.webp",
+  "datePublished": "2026-10-18T10:05:37.000Z",
+  "dateModified": "2026-10-18T10:29:07.114Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Pomelover",
+      "url": "https://pomelover.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://pomelover.github.io/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/7.1.0/files/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2.1 颜色',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/images/pages/background.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">60</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Pomeloverの自习室</span></a><a class="nav-page-title" href="/"><span class="site-name">2.1 颜色</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fab fa-weixin"></i><span> 说说</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">2.1 颜色</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-18T10:05:37.000Z" title="发表于 2026-10-18 18:05:37">2026-10-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-18T10:29:07.114Z" title="更新于 2026-10-18 18:29:07">2026-10-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LearnOpenGL/">LearnOpenGL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="2-1-颜色"><a href="#2-1-颜色" class="headerlink" title="2.1 颜色"></a>2.1 颜色</h1><blockquote>
+<p>学习笔记系列，教程：Joey de Vries《LearnOpenGL》，中文版地址 <a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">learnopengl-cn.github.io</a>。</p>
+</blockquote>
+<p>　　现实世界中存在无数种颜色，每个物体都有自己的颜色。要模拟真实世界中的（无限的）颜色，只能借助（有限的）数值来表示，因此并非所有现实世界中的颜色都能用数值表达出来。不过数值仍能表现出非常多的颜色，多到几乎不会注意到与现实颜色之间有任何差异。颜色可以被数字化地表示为<strong>红色</strong>（Red）、<strong>绿色</strong>（Green）和<strong>蓝色</strong>（Blue）三个分量，通常缩写为 <strong>RGB</strong>。</p>
+<p>　　在现实生活中看到某个物体的颜色，并不是这个物体真正拥有的颜色，而是它所<strong>反射</strong>（Reflected）的颜色。换句话说，那些不能被物体<strong>吸收</strong>（Absorb）的颜色（被拒绝的颜色）就是能够感知到的物体颜色。</p>
+<p><img src="/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/color-reflection.png" alt="白光照射红色物体：除红色外的分量被吸收，反射的红光进入眼睛形成物体颜色" loading='lazy'></p>
+<p>　　这些颜色反射的定律被直接地运用在图形领域。在 OpenGL 中创建光源时，需要给光源指定一个颜色；前面示例中有一颗白色的太阳，因此这里也把光源的颜色设置为白色。</p>
+<p>　　再次审视那个玩具（这一次它仍然是珊瑚红），看看如何在图形学中计算出它的反射颜色。将光源颜色与物体颜色这两个向量按分量相乘，得到的结果就是最终的颜色向量：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">lightColor</span><span class="params">(<span class="number">1.0f</span>, <span class="number">1.0f</span>, <span class="number">1.0f</span>)</span></span>;</span><br><span class="line"><span class="function">glm::vec3 <span class="title">toyColor</span><span class="params">(<span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.31f</span>)</span></span>;</span><br><span class="line">glm::vec3 result = lightColor * toyColor; <span class="comment">// = (1.0f, 0.5f, 0.31f);</span></span><br></pre></td></tr></table></figure>
+
+<p>　　玩具的颜色吸收了白色光源中很大一部分颜色，但它依据自身的颜色值对红、绿、蓝三个分量都做出了一定的反射，这也正是现实中颜色的工作原理。由此可以把物体的颜色定义为：物体反射光源各个颜色分量的大小。那么，改用绿色的光源又会发生什么？</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">lightColor</span><span class="params">(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>)</span></span>;</span><br><span class="line"><span class="function">glm::vec3 <span class="title">toyColor</span><span class="params">(<span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.31f</span>)</span></span>;</span><br><span class="line">glm::vec3 result = lightColor * toyColor; <span class="comment">// = (0.0f, 0.5f, 0.0f);</span></span><br></pre></td></tr></table></figure>
+
+<p>　　此时并没有红色和蓝色的光可供玩具吸收或反射。玩具吸收了光线中一半的绿色值，同时也反射了另一半绿色值，于是看上去呈现<strong>深绿色</strong>（Dark-greenish）。若用绿色光源照射玩具，只有绿色分量能够被反射并被感知，红色和蓝色分量都无法被感知，一个珊瑚红的玩具就这样突然变成了深绿色的物体。再看一个使用深橄榄绿色（Dark olive-green）光源的例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">lightColor</span><span class="params">(<span class="number">0.33f</span>, <span class="number">0.42f</span>, <span class="number">0.18f</span>)</span></span>;</span><br><span class="line"><span class="function">glm::vec3 <span class="title">toyColor</span><span class="params">(<span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.31f</span>)</span></span>;</span><br><span class="line">glm::vec3 result = lightColor * toyColor; <span class="comment">// = (0.33f, 0.21f, 0.06f);</span></span><br></pre></td></tr></table></figure>
+
+<p>　　借助不同的光源颜色，可以让物体显现出意想不到的颜色，有创意地运用颜色其实并不困难。</p>
+<blockquote>
+<p><strong>Tip</strong>：显示屏是<strong>加色</strong>的——RGB 三个分量叠加越多越亮，关掉全部才得到黑色；而物体显色是<strong>减色</strong>的——光照到表面，部分波段被吸收，剩下未被吸收的部分才被看到。两者方向相反，这也是为什么把材质颜色乘到光照上时，白色光照射红色材质只会得到红色，而不会变亮。</p>
+</blockquote>
+<p>　　颜色的理论已经足够，下面构造一个实验用的场景。</p>
+<h2 id="创建一个光照场景"><a href="#创建一个光照场景" class="headerlink" title="创建一个光照场景"></a>创建一个光照场景</h2><p>　　既然接下来要使用光源，就希望把光源显示为可见的物体，并在场景中至少加入一个物体来检验模拟光照的效果。</p>
+<p>　　首先需要一个物体作为被投光（Cast the light）的对象，这里沿用前面教程中那个著名的立方体箱子。此外还需要一个物体来表示光源在 3D 场景中的位置，简单起见仍然用一个立方体来代表光源（立方体的顶点数据已经具备）。</p>
+<p>　　绘制箱子首先需要一个顶点着色器。与之前的顶点着色器相比，箱子的顶点位置保持不变（虽然这一次不再需要纹理坐标了），因此顶点着色器中没有新的代码，直接使用前面教程中顶点着色器的精简版：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line"></span><br><span class="line">uniform mat4 model;</span><br><span class="line">uniform mat4 view;</span><br><span class="line">uniform mat4 projection;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gl_Position = projection * view * model * <span class="built_in">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　顶点数据与属性指针也要同步更新，使其与新的顶点着色器保持一致。此外还需要一个立方体来表示灯（光源），因此要为灯创建一个专门的 VAO。灯当然也可以和其他物体共用同一个 VAO，只要对它的 model（模型）矩阵做一些变换即可；但接下来的教程会频繁修改顶点数据和属性指针，这些修改不应该波及到灯（对灯而言只需关心顶点位置），所以为灯单独创建一个 VAO 是有必要的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> lightVAO;</span><br><span class="line"><span class="built_in">glGenVertexArrays</span>(<span class="number">1</span>, &amp;lightVAO);</span><br><span class="line"><span class="built_in">glBindVertexArray</span>(lightVAO);</span><br><span class="line"><span class="comment">// 只需要绑定VBO不用再次设置VBO的数据，因为箱子的VBO数据中已经包含了正确的立方体顶点数据</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);</span><br><span class="line"><span class="comment">// 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)<span class="number">0</span>);</span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　这段代码相当直观。表示灯的立方体与被照的箱子都已经创建好，剩下只需再定义一个片段着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">out vec4 FragColor;</span><br><span class="line"></span><br><span class="line">uniform vec3 objectColor;</span><br><span class="line">uniform vec3 lightColor;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FragColor = <span class="built_in">vec4</span>(lightColor * objectColor, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　这个片段着色器从 uniform 变量中接收物体的颜色与光源的颜色，并像本节开头讨论的那样把光源颜色与物体（反射的）颜色相乘，理解起来很容易。物体的颜色取前面提到的珊瑚红，光源则设为白色：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在此之前不要忘记首先 use 对应的着色器程序（来设定uniform）</span></span><br><span class="line">lightingShader.<span class="built_in">use</span>();</span><br><span class="line">lightingShader.<span class="built_in">setVec3</span>(<span class="string">&quot;objectColor&quot;</span>, <span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.31f</span>);</span><br><span class="line">lightingShader.<span class="built_in">setVec3</span>(<span class="string">&quot;lightColor&quot;</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>, <span class="number">1.0f</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　需要注意的是，修改顶点着色器或片段着色器之后，灯的位置或颜色也会随之改变，这并不是期望的效果。灯的颜色不应在后续教程中受到光照计算结果的影响，而应与这些计算分离开来；灯需要一直保持明亮，不受其他颜色变化的影响，这样它才更像一个真实的光源。</p>
+<p>　　为此，需要为灯的绘制再准备一套着色器，使它在光照着色器发生改变时不受影响。灯的顶点着色器与当前的顶点着色器完全相同，直接沿用即可。灯的片段着色器为灯定义了一个不变的常量白色，从而保证灯的颜色始终是亮的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">out vec4 FragColor;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FragColor = <span class="built_in">vec4</span>(<span class="number">1.0</span>); <span class="comment">// 将向量的四个分量全部设置为1.0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　绘制物体时，使用刚刚定义的光照着色器绘制箱子（或者其它物体）；绘制灯时则切换到灯的着色器。后续教程会逐步更新这个光照着色器，慢慢实现更真实的效果。</p>
+<p>　　使用灯立方体的主要目的，是让光源在场景中的位置变得可见。通常会在场景中定义一个光源的位置，但位置本身并没有视觉意义；为了显示真正的灯，就把表示光源的立方体绘制在与光源相同的位置。</p>
+<p>　　先声明一个全局 <code>vec3</code> 变量，表示光源在世界空间坐标中的位置：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">lightPos</span><span class="params">(<span class="number">1.2f</span>, <span class="number">1.0f</span>, <span class="number">2.0f</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>　　随后把灯位移到该位置，并将它缩小一些，让它不那么显眼：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">model = glm::<span class="built_in">mat4</span>();</span><br><span class="line">model = glm::<span class="built_in">translate</span>(model, lightPos);</span><br><span class="line">model = glm::<span class="built_in">scale</span>(model, glm::<span class="built_in">vec3</span>(<span class="number">0.2f</span>));</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip</strong>：<code>glm::mat4()</code> 在较新的 GLM（0.9.9 起）里是<strong>未初始化</strong>的矩阵，并不等于单位矩阵，除非定义了 <code>GLM_FORCE_CTOR_INIT</code>。这里与教程一致保留原写法，实际代码应写成 <code>glm::mat4(1.0f)</code>，否则 model 矩阵可能是随机值，箱子直接飞出画面。</p>
+</blockquote>
+<p>　　绘制灯立方体的代码大致如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lampShader.<span class="built_in">use</span>();</span><br><span class="line"><span class="comment">// 设置模型、视图和投影矩阵uniform</span></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 绘制灯立方体对象</span></span><br><span class="line"><span class="built_in">glBindVertexArray</span>(lightVAO);</span><br><span class="line"><span class="built_in">glDrawArrays</span>(GL_TRIANGLES, <span class="number">0</span>, <span class="number">36</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/light-scene-result.png" alt="场景中珊瑚红色的箱子与代表光源的白色小立方体" loading='lazy'></p>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>　　物体的颜色本质上是它反射出来的那部分光；光照计算把光源颜色与物体颜色按分量相乘，就得到了最终的反射颜色。</p>
+<ul>
+<li><strong>颜色表示</strong>：RGB 三个分量数字化地表示颜色，现实中的无限颜色只能用有限数值近似，但差异通常难以察觉。</li>
+<li><strong>反射与吸收</strong>：只有未被吸收（被拒绝）的分量才被感知，因此物体的颜色就是它对光源各颜色分量的反射程度。</li>
+<li><strong>分量相乘</strong>：光色与材质色逐通道调制——白光下珊瑚红保持不变，绿光下只剩一半绿而呈深绿色，深橄榄绿光下得到 <code>(0.33, 0.21, 0.06)</code>。</li>
+<li><strong>场景搭建</strong>：箱子沿用原顶点数据与精简顶点着色器，片段着色器用 <code>objectColor</code> 与 <code>lightColor</code> 两个 uniform 相乘；灯另建 <code>lightVAO</code> 与独立着色器，片段着色器输出常量白色，绘制在 <code>lightPos</code> 处并缩小到 0.2，从而始终明亮、不受光照计算影响。</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/02%20Lighting/01%20Colors/">LearnOpenGL CN：颜色</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pomelover.github.io">Pomelover</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pomelover.github.io/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/">https://pomelover.github.io/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pomelover.github.io" target="_blank">Pomeloverの自习室</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LearnOpenGL/">LearnOpenGL</a><a class="post-meta__tags" href="/tags/OpenGL/">OpenGL</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></div><div class="post-share"><div class="social-share" data-image="/images/jinx.webp" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://registry.npmmirror.com/butterfly-extsrc/1.1.6/files/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2026/10/17/PBRT/PBRT-02/" title="（二）蒙特卡洛积分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">（二）蒙特卡洛积分</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.1-OpenGL/" title="1.1 OpenGL"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-16</div><div class="info-item-2">1.1 OpenGL</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/16/LearnOpenGL/LearnOpenGL-1.2-HelloWindow/" title="1.2 你好，窗口"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-16</div><div class="info-item-2">1.2 你好，窗口</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.3-HelloTriangle/" title="1.3 你好，三角形"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-20</div><div class="info-item-2">1.3 你好，三角形</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/21/LearnOpenGL/LearnOpenGL-1.5-Textures/" title="1.5 纹理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-21</div><div class="info-item-2">1.5 纹理</div></div></div></a><a class="pagination-related no-desc" href="/2026/09/20/LearnOpenGL/LearnOpenGL-1.4-Shaders/" title="1.4 着色器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-20</div><div class="info-item-2">1.4 着色器</div></div></div></a><a class="pagination-related no-desc" href="/2026/10/04/LearnOpenGL/LearnOpenGL-1.7-CoordinateSystems/" title="1.7 坐标系统"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-04</div><div class="info-item-2">1.7 坐标系统</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/jinx.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Pomelover</div><div class="author-info-description">Stay Humble, Keep Learning.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">60</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/pomelover"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/pomelover" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hope this helps you.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2-1-%E9%A2%9C%E8%89%B2"><span class="toc-number">1.</span> <span class="toc-text">2.1 颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%85%89%E7%85%A7%E5%9C%BA%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">创建一个光照场景</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/18/LearnOpenGL/LearnOpenGL-2.1-Colors/" title="2.1 颜色">2.1 颜色</a><time datetime="2026-10-18T10:05:37.000Z" title="发表于 2026-10-18 18:05:37">2026-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/17/PBRT/PBRT-02/" title="（二）蒙特卡洛积分">（二）蒙特卡洛积分</a><time datetime="2026-10-16T16:00:00.000Z" title="发表于 2026-10-17 00:00:00">2026-10-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/10/LearnOpenGL/LearnOpenGL-1.8-Camera/" title="1.8 摄像机">1.8 摄像机</a><time datetime="2026-10-09T16:00:00.000Z" title="发表于 2026-10-10 00:00:00">2026-10-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/04/LearnOpenGL/LearnOpenGL-1.7-CoordinateSystems/" title="1.7 坐标系统">1.7 坐标系统</a><time datetime="2026-10-04T15:45:39.000Z" title="发表于 2026-10-04 23:45:39">2026-10-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/22/LearnOpenGL/LearnOpenGL-1.6-Transformations/" title="1.6 变换">1.6 变换</a><time datetime="2026-09-22T15:45:39.000Z" title="发表于 2026-09-22 23:45:39">2026-09-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Pomelover</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="https://registry.npmmirror.com/instant.page/5.2.0/files/instantpage.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="/"></script></div></body></html>
